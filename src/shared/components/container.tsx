@@ -1,0 +1,17 @@
+import type { HTMLAttributes, ReactNode } from 'react'
+import { cn } from '@/shared/utils/cn'
+
+export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode
+}
+
+export function Container({ className, children, ...props }: ContainerProps) {
+  return (
+    <div
+      className={cn('mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-8', className)}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
