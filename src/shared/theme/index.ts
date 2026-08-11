@@ -1,9 +1,14 @@
 export {
   AppColors,
   AppColorClasses,
-  AppShadows,
   type AppBrandShade,
 } from './app-colors'
+
+export { AppGradients, type AppGradientName } from './app-gradients'
+
+export { AppRadius, type AppRadiusName } from './app-radius'
+
+export { AppShadows, type AppShadowName } from './app-shadows'
 
 export { AppTextStyles, type AppTextStyleName } from './app-text-styles'
 

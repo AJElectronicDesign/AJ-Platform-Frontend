@@ -1,3 +1,5 @@
+export type CaseStudyImageKey = 'iotGateway' | 'connectedDevice'
+
 export interface CaseStudy {
   id: string
   title: string
@@ -5,4 +7,6 @@ export interface CaseStudy {
   industry?: string
   outcome?: string
   imageAlt?: string
+  /** Key into AppImages.landing.caseStudies for easy photography swaps. */
+  imageKey?: CaseStudyImageKey
 }

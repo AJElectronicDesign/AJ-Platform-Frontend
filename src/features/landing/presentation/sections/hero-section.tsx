@@ -1,7 +1,13 @@
 import type { HeroContent } from '@/features/landing/domain/entities/landing-content'
-import { HeroVisual } from '@/features/landing/presentation/components/hero-visual'
 import { Container } from '@/shared/components/container'
+import {
+  AppColorClasses,
+  AppImages,
+  AppRadius,
+  AppTextStyles,
+} from '@/shared/theme'
 import { Button } from '@/shared/ui/button'
+import { cn } from '@/shared/utils/cn'
 
 export interface HeroSectionProps {
   content: HeroContent
@@ -9,35 +15,54 @@ export interface HeroSectionProps {
 
 export function HeroSection({ content }: HeroSectionProps) {
   return (
-    <section className="relative overflow-hidden border-b border-border/70 bg-white">
-      <div className="pointer-events-none absolute inset-0 grid-tech opacity-60" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(ellipse_at_top,_rgb(204_251_241/0.7),_transparent_60%)]" />
+    <section
+      className={cn(
+        'relative overflow-hidden border-b',
+        AppColorClasses.border.DEFAULT,
+      )}
+    >
+      <img
+        src={AppImages.landing.heroBackground}
+        alt=""
+        className="absolute inset-0 h-full w-full scale-105 object-cover object-[72%_42%] sm:object-[78%_40%]"
+        loading="eager"
+        decoding="async"
+      />
 
-      <Container className="relative grid items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-28">
-        <div className="fade-up">
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-brand-700">
-            {content.eyebrow}
-          </p>
-          <h1 className="mt-5 max-w-xl text-balance text-4xl font-semibold tracking-tight text-ink sm:text-5xl lg:text-[3.4rem] lg:leading-[1.08]">
-            {content.title}
-          </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-muted">
-            {content.description}
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href={content.primaryCta.href}>
-              <Button size="lg">{content.primaryCta.label}</Button>
-            </a>
-            <a href={content.secondaryCta.href}>
-              <Button size="lg" variant="secondary">
-                {content.secondaryCta.label}
-              </Button>
-            </a>
+      <Container className="relative py-20 sm:py-24 lg:py-32">
+        <div className="fade-up relative max-w-2xl">
+          {/* Soft panel only behind the copy — image stays clear around it */}
+          <div
+            className={cn(
+              'pointer-events-none absolute -inset-x-5 -inset-y-6 sm:-inset-x-8 sm:-inset-y-8',
+              AppRadius.xl,
+              'bg-white/78 backdrop-blur-[2px] ring-1 ring-white/50',
+            )}
+            aria-hidden="true"
+          />
+
+          <div className="relative px-1 sm:px-2">
+            <p className={AppTextStyles.eyebrow}>{content.eyebrow}</p>
+            <h1 className={cn(AppTextStyles.display, 'mt-5')}>{content.title}</h1>
+            <p
+              className={cn(
+                AppTextStyles.body,
+                'mt-5 max-w-xl font-medium text-ink/90',
+              )}
+            >
+              {content.description}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href={content.primaryCta.href}>
+                <Button size="lg">{content.primaryCta.label}</Button>
+              </a>
+              <a href={content.secondaryCta.href}>
+                <Button size="lg" variant="secondary">
+                  {content.secondaryCta.label}
+                </Button>
+              </a>
+            </div>
           </div>
-        </div>
-
-        <div className="fade-up fade-up-delay-2">
-          <HeroVisual highlights={content.highlights} />
         </div>
       </Container>
     </section>

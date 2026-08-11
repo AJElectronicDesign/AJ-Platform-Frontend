@@ -1,8 +1,17 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
-import { AppColorClasses, AppShadows, AppTextStyles } from '@/shared/theme'
+import {
+  AppColorClasses,
+  AppShadows,
+  AppTextStyles,
+} from '@/shared/theme'
 import { cn } from '@/shared/utils/cn'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'soft'
+type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'ghost'
+  | 'soft'
+  | 'secondaryOnDark'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -29,6 +38,13 @@ const variantStyles: Record<ButtonVariant, string> = {
     AppColorClasses.hover.bgBrand50,
     AppColorClasses.hover.textBrand800,
     'focus-visible:ring-brand-500',
+  ),
+  secondaryOnDark: cn(
+    'border bg-transparent',
+    AppColorClasses.border.onDarkStrong,
+    AppColorClasses.text.onDark,
+    'hover:border-brand-300/50 hover:bg-white/5 hover:text-brand-300',
+    'focus-visible:ring-brand-300',
   ),
   soft: cn(
     AppColorClasses.bg.brand50,
@@ -62,6 +78,7 @@ export function Button({
       type={type}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+        variant === 'secondaryOnDark' && 'focus-visible:ring-offset-navy',
         AppTextStyles.button,
         variantStyles[variant],
         sizeStyles[size],

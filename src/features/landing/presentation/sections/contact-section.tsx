@@ -3,6 +3,14 @@ import type { SectionIntro } from '@/features/landing/domain/entities/landing-co
 import { ContactForm } from '@/features/landing/presentation/components/contact-form'
 import { Container } from '@/shared/components/container'
 import { SectionHeader } from '@/shared/components/section-header'
+import {
+  AppColorClasses,
+  AppGradients,
+  AppRadius,
+  AppTextStyles,
+} from '@/shared/theme'
+import { CardGlowShell } from '@/shared/ui/card-glow-shell'
+import { cn } from '@/shared/utils/cn'
 
 export interface ContactSectionProps {
   intro: SectionIntro
@@ -11,8 +19,16 @@ export interface ContactSectionProps {
 
 export function ContactSection({ intro, contact }: ContactSectionProps) {
   return (
-    <section id="contact" className="scroll-mt-24 bg-surface-muted py-20 sm:py-24">
-      <Container>
+    <section
+      id="contact"
+      className={cn(
+        'relative scroll-mt-24 overflow-hidden py-20 sm:py-24',
+        AppGradients.surfaceAqua,
+      )}
+    >
+      <div className="pointer-events-none absolute inset-0 circuit-tech opacity-55" />
+
+      <Container className="relative">
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-14">
           <div>
             <SectionHeader
@@ -21,41 +37,53 @@ export function ContactSection({ intro, contact }: ContactSectionProps) {
               description={intro.description}
             />
 
-            <dl className="mt-10 space-y-5">
-              <div className="rounded-2xl border border-border bg-white p-5 shadow-[var(--shadow-soft)]">
-                <dt className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-brand-700">
-                  Email
-                </dt>
-                <dd className="mt-2 text-sm font-medium text-ink">
-                  <a
-                    href={`mailto:${contact.email}`}
-                    className="transition-colors hover:text-brand-700"
+            <dl className="mt-10 space-y-4">
+              {(
+                [
+                  {
+                    label: 'Email',
+                    value: (
+                      <a
+                        href={`mailto:${contact.email}`}
+                        className="transition-colors hover:text-brand-700"
+                      >
+                        {contact.email}
+                      </a>
+                    ),
+                  },
+                  {
+                    label: 'Phone',
+                    value: (
+                      <a
+                        href={`tel:${contact.phone.replace(/[^\d+]/g, '')}`}
+                        className="transition-colors hover:text-brand-700"
+                      >
+                        {contact.phone}
+                      </a>
+                    ),
+                  },
+                  {
+                    label: 'Location',
+                    value: contact.location,
+                  },
+                ] as const
+              ).map((item) => (
+                <CardGlowShell key={item.label}>
+                  <div
+                    className={cn(
+                      'card-glow-face border bg-white p-5 transition-[border-color] duration-300',
+                      AppRadius.xl,
+                      AppColorClasses.border.DEFAULT,
+                      'group-hover:border-brand-500/50',
+                    )}
                   >
-                    {contact.email}
-                  </a>
-                </dd>
-              </div>
-              <div className="rounded-2xl border border-border bg-white p-5 shadow-[var(--shadow-soft)]">
-                <dt className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-brand-700">
-                  Phone
-                </dt>
-                <dd className="mt-2 text-sm font-medium text-ink">
-                  <a
-                    href={`tel:${contact.phone.replace(/[^\d+]/g, '')}`}
-                    className="transition-colors hover:text-brand-700"
-                  >
-                    {contact.phone}
-                  </a>
-                </dd>
-              </div>
-              <div className="rounded-2xl border border-border bg-white p-5 shadow-[var(--shadow-soft)]">
-                <dt className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-brand-700">
-                  Location
-                </dt>
-                <dd className="mt-2 text-sm font-medium text-ink">
-                  {contact.location}
-                </dd>
-              </div>
+                    <dt className={AppTextStyles.microLabel}>{item.label}</dt>
+                    <dd className={cn(AppTextStyles.bodyMd, 'mt-2')}>
+                      {item.value}
+                    </dd>
+                  </div>
+                </CardGlowShell>
+              ))}
             </dl>
           </div>
 

@@ -14,20 +14,43 @@
   --color-brand-900: #134e4a;
   --color-brand-950: #042f2e;
 
+  --color-aqua: #5eead4;
+  --color-aqua-light: #99f6e4;
+  --color-aqua-soft: #e6fffa;
+
+  --color-navy: #0b1220;
+  --color-navy-soft: #121a2b;
+  --color-navy-muted: #1a2438;
+
   --color-surface: #ffffff;
   --color-surface-muted: #f8fafc;
   --color-surface-soft: #f0fdfa;
+  --color-surface-alt: #f1f5f9;
+  --color-surface-teal: #f0fdfa;
+  --color-surface-dark: #0b1220;
+
   --color-ink: #0f172a;
   --color-ink-muted: #64748b;
   --color-ink-subtle: #94a3b8;
+  --color-ink-on-dark: #f8fafc;
+  --color-ink-on-dark-muted: #94a3b8;
+
   --color-border: #e2e8f0;
   --color-border-strong: #cbd5e1;
+  --color-border-teal: #99f6e4;
+  --color-border-on-dark: rgb(248 250 252 / 0.12);
+  --color-border-on-dark-strong: rgb(248 250 252 / 0.2);
 
   --font-sans: "Manrope", "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
   --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px rgb(15 23 42 / 0.04);
   --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.04), 0 16px 40px rgb(15 23 42 / 0.08);
+  --shadow-glow-teal: 0 8px 28px rgb(20 184 166 / 0.14);
+  --shadow-glow-teal-strong:
+    0 10px 28px rgb(20 184 166 / 0.22),
+    0 20px 56px rgb(13 148 136 / 0.2),
+    0 0 40px rgb(94 234 212 / 0.28);
 }
 
 @layer base {
@@ -68,6 +91,31 @@
     background-size: 48px 48px;
   }
 
+  .grid-tech-dark {
+    background-image:
+      linear-gradient(to right, rgb(248 250 252 / 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(248 250 252 / 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .circuit-tech {
+    background-image:
+      linear-gradient(to right, rgb(13 148 136 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(13 148 136 / 0.05) 1px, transparent 1px),
+      radial-gradient(circle at 20% 30%, rgb(20 184 166 / 0.08), transparent 28%),
+      radial-gradient(circle at 80% 70%, rgb(15 118 110 / 0.06), transparent 32%);
+    background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+  }
+
+  .circuit-tech-dark {
+    background-image:
+      linear-gradient(to right, rgb(45 212 191 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(45 212 191 / 0.05) 1px, transparent 1px),
+      radial-gradient(circle at 18% 25%, rgb(20 184 166 / 0.1), transparent 30%),
+      radial-gradient(circle at 82% 70%, rgb(94 234 212 / 0.06), transparent 34%);
+    background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+  }
+
   .fade-up {
     animation: fade-up 0.7s ease-out both;
   }
@@ -82,6 +130,49 @@
 
   .fade-up-delay-3 {
     animation-delay: 240ms;
+  }
+
+  .reveal-on-scroll {
+    animation: fade-up 0.65s ease-out both;
+    animation-timeline: view();
+    animation-range: entry 8% cover 28%;
+  }
+
+  /**
+   * Exterior-only teal→aqua aura.
+   * Aura is a sibling BEHIND an opaque face — never paints into content.
+   */
+  .card-glow-shell {
+    position: relative;
+  }
+
+  .card-glow-aura {
+    position: absolute;
+    inset: -14px;
+    z-index: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgb(13 148 136) 0%,
+      rgb(20 184 166) 40%,
+      rgb(94 234 212) 75%,
+      rgb(15 118 110) 100%
+    );
+    opacity: 0;
+    filter: blur(28px);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .card-glow-shell:hover .card-glow-aura,
+  .card-glow-shell:focus-within .card-glow-aura {
+    opacity: 0.5;
+  }
+
+  .card-glow-face {
+    position: relative;
+    z-index: 1;
+    background-color: #ffffff;
   }
 }
 
@@ -105,7 +196,12 @@
   .fade-up,
   .fade-up-delay-1,
   .fade-up-delay-2,
-  .fade-up-delay-3 {
+  .fade-up-delay-3,
+  .reveal-on-scroll {
     animation: none;
+  }
+
+  .card-glow-aura {
+    transition: none;
   }
 }

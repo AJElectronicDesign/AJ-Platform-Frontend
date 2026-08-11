@@ -3,6 +3,8 @@ import type { SectionIntro } from '@/features/landing/domain/entities/landing-co
 import { CaseStudyCard } from '@/features/landing/presentation/components/case-study-card'
 import { Container } from '@/shared/components/container'
 import { SectionHeader } from '@/shared/components/section-header'
+import { AppColorClasses } from '@/shared/theme'
+import { cn } from '@/shared/utils/cn'
 
 export interface CaseStudiesSectionProps {
   intro: SectionIntro
@@ -18,7 +20,13 @@ export function CaseStudiesSection({
   }
 
   return (
-    <section id="case-studies" className="scroll-mt-24 bg-surface-muted py-20 sm:py-24">
+    <section
+      id="case-studies"
+      className={cn(
+        'scroll-mt-24 py-20 sm:py-24',
+        AppColorClasses.bg.surface,
+      )}
+    >
       <Container>
         <SectionHeader
           eyebrow={intro.eyebrow}

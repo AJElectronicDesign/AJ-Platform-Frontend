@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" fill="none" role="img" aria-labelledby="title">
+  <title id="title">Industrial IoT gateway hardware visual</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="640" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0b1220"/>
+      <stop offset="0.55" stop-color="#121a2b"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="board" x1="120" y1="70" x2="520" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#134e4a"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <g opacity="0.22" stroke="#5eead4" stroke-width="1">
+    <path d="M40 60h80M120 60v40M160 100h60M40 180h100M140 180v50M40 280h140"/>
+    <path d="M520 48h80M520 48v70M600 118h-40M480 220h120M600 220v60M480 300h90"/>
+    <circle cx="120" cy="60" r="3" fill="#5eead4"/>
+    <circle cx="140" cy="180" r="3" fill="#5eead4"/>
+    <circle cx="520" cy="48" r="3" fill="#5eead4"/>
+    <circle cx="600" cy="220" r="3" fill="#5eead4"/>
+  </g>
+  <rect x="130" y="78" width="380" height="204" rx="18" fill="url(#board)" stroke="#99f6e4" stroke-opacity="0.35"/>
+  <rect x="168" y="112" width="90" height="58" rx="8" fill="#0b1220" opacity="0.55"/>
+  <rect x="278" y="118" width="120" height="46" rx="8" fill="#042f2e" stroke="#2dd4bf" stroke-opacity="0.45"/>
+  <rect x="420" y="112" width="54" height="54" rx="8" fill="#0b1220" opacity="0.45"/>
+  <g stroke="#99f6e4" stroke-opacity="0.55" stroke-width="2" stroke-linecap="round">
+    <path d="M188 190h46v36h-20"/>
+    <path d="M300 186h70v28"/>
+    <path d="M430 186h28v48"/>
+    <path d="M220 250h180"/>
+  </g>
+  <g fill="#5eead4">
+    <circle cx="188" cy="190" r="3.5"/>
+    <circle cx="300" cy="186" r="3.5"/>
+    <circle cx="430" cy="186" r="3.5"/>
+    <circle cx="400" cy="250" r="3.5"/>
+  </g>
+  <g opacity="0.7" stroke="#5eead4" stroke-width="1.5" fill="none">
+    <path d="M486 148c18-10 30-10 48 0"/>
+    <path d="M496 162c12-7 20-7 32 0"/>
+    <path d="M506 176c6-4 10-4 16 0"/>
+  </g>
+</svg>

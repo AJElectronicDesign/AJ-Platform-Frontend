@@ -2,7 +2,12 @@ import { useState, type FormEvent } from 'react'
 import { sendContactMessage } from '@/features/landing/application/use-cases/send-contact-message'
 import { emailJsContactSender } from '@/features/landing/infrastructure/services/emailjs-contact-sender'
 import { brand } from '@/shared/constants/brand'
-import { AppColorClasses, AppTextStyles } from '@/shared/theme'
+import {
+  AppColorClasses,
+  AppRadius,
+  AppShadows,
+  AppTextStyles,
+} from '@/shared/theme'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Textarea } from '@/shared/ui/textarea'
@@ -49,7 +54,13 @@ export function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-3xl border border-border bg-white p-6 shadow-[var(--shadow-soft)] sm:p-8"
+      className={cn(
+        'space-y-4 border p-6 sm:p-8',
+        AppRadius.xl,
+        AppColorClasses.border.DEFAULT,
+        AppColorClasses.bg.white,
+        AppShadows.soft,
+      )}
       noValidate
     >
       <div className="grid gap-4 sm:grid-cols-2">
@@ -106,7 +117,8 @@ export function ContactForm() {
       {feedback ? (
         <p
           className={cn(
-            'rounded-xl border px-3 py-2 text-sm',
+            'border px-3 py-2 text-sm',
+            AppRadius.md,
             feedback.type === 'success'
               ? 'border-brand-100 bg-brand-50 text-brand-800'
               : 'border-red-200 bg-red-50 text-red-700',

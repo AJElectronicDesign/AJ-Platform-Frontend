@@ -3,6 +3,7 @@ import { LoginForm } from '@/features/auth/presentation/components/login-form'
 import { Container } from '@/shared/components/container'
 import {
   AppColorClasses,
+  AppGradients,
   AppShadows,
   AppTextStyles,
 } from '@/shared/theme'
@@ -12,12 +13,11 @@ export function LoginPage() {
   return (
     <section
       className={cn(
-        'relative flex min-h-[calc(100vh-4.25rem)] items-center py-12 sm:py-16',
-        AppColorClasses.bg.surfaceMuted,
+        'relative flex min-h-[calc(100vh-4.25rem)] items-center overflow-hidden py-12 sm:py-16',
+        AppGradients.surfaceAqua,
       )}
     >
-      <div className="pointer-events-none absolute inset-0 grid-tech opacity-50" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(ellipse_at_top,_rgb(204_251_241/0.65),_transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0 circuit-tech opacity-55" />
 
       <Container className="relative w-full max-w-md">
         <div

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" fill="none" role="img" aria-labelledby="title">
+  <title id="title">Connected consumer device prototype visual</title>
+  <defs>
+    <linearGradient id="bg2" x1="640" y1="0" x2="0" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0f172a"/>
+      <stop offset="0.5" stop-color="#134e4a"/>
+      <stop offset="1" stop-color="#0b1220"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg2)"/>
+  <g opacity="0.18" stroke="#99f6e4" stroke-width="1">
+    <path d="M60 80h70v40h50"/>
+    <path d="M60 220h90"/>
+    <path d="M520 70h70v90"/>
+    <path d="M500 260h100v40"/>
+    <circle cx="130" cy="120" r="3" fill="#99f6e4"/>
+    <circle cx="150" cy="220" r="3" fill="#99f6e4"/>
+    <circle cx="590" cy="160" r="3" fill="#99f6e4"/>
+  </g>
+  <rect x="210" y="70" width="220" height="220" rx="36" fill="#121a2b" stroke="#5eead4" stroke-opacity="0.35"/>
+  <rect x="236" y="98" width="168" height="120" rx="18" fill="#0b1220" stroke="#2dd4bf" stroke-opacity="0.35"/>
+  <circle cx="320" cy="158" r="28" fill="#0f766e" opacity="0.55"/>
+  <circle cx="320" cy="158" r="12" fill="#5eead4" opacity="0.8"/>
+  <rect x="262" y="238" width="116" height="10" rx="5" fill="#14b8a6" opacity="0.55"/>
+  <g stroke="#99f6e4" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round">
+    <path d="M170 150h40"/>
+    <path d="M430 150h40"/>
+    <path d="M320 290v30"/>
+  </g>
+  <g fill="#5eead4">
+    <circle cx="170" cy="150" r="3"/>
+    <circle cx="470" cy="150" r="3"/>
+    <circle cx="320" cy="320" r="3"/>
+  </g>
+  <g opacity="0.65" stroke="#5eead4" stroke-width="1.5" fill="none">
+    <path d="M448 108c22-14 38-14 60 0"/>
+    <path d="M458 124c14-9 24-9 40 0"/>
+  </g>
+</svg>

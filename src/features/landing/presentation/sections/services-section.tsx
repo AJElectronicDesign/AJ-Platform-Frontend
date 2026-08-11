@@ -3,6 +3,8 @@ import type { Service } from '@/features/landing/domain/entities/service'
 import { ServiceCard } from '@/features/landing/presentation/components/service-card'
 import { Container } from '@/shared/components/container'
 import { SectionHeader } from '@/shared/components/section-header'
+import { AppColorClasses, AppGradients } from '@/shared/theme'
+import { cn } from '@/shared/utils/cn'
 
 export interface ServicesSectionProps {
   intro: SectionIntro
@@ -11,8 +13,16 @@ export interface ServicesSectionProps {
 
 export function ServicesSection({ intro, services }: ServicesSectionProps) {
   return (
-    <section id="services" className="scroll-mt-24 bg-white py-20 sm:py-24">
-      <Container>
+    <section
+      id="services"
+      className={cn(
+        'relative scroll-mt-24 overflow-hidden py-20 sm:py-24',
+        AppGradients.surfaceAqua,
+      )}
+    >
+      <div className="pointer-events-none absolute inset-0 circuit-tech opacity-55" />
+
+      <Container className="relative">
         <SectionHeader
           eyebrow={intro.eyebrow}
           title={intro.title}
@@ -23,9 +33,7 @@ export function ServicesSection({ intro, services }: ServicesSectionProps) {
             <div
               key={service.id}
               className={
-                index === 3
-                  ? 'lg:col-span-2 lg:col-start-2'
-                  : 'lg:col-span-2'
+                index === 3 ? 'lg:col-span-2 lg:col-start-2' : 'lg:col-span-2'
               }
             >
               <ServiceCard service={service} />
@@ -33,6 +41,15 @@ export function ServicesSection({ intro, services }: ServicesSectionProps) {
           ))}
         </div>
       </Container>
+
+      <div
+        className={cn(
+          'pointer-events-none absolute inset-x-0 bottom-0 h-px',
+          AppColorClasses.border.brand100,
+          'bg-brand-100',
+        )}
+        aria-hidden="true"
+      />
     </section>
   )
 }

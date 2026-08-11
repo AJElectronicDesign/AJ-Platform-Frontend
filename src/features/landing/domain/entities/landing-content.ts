@@ -1,7 +1,7 @@
 import type { CaseStudy } from './case-study'
 import type { ContactInfo } from './contact-info'
 import type { Service } from './service'
-import type { Technology } from './technology'
+import type { TechnologyCategory } from './technology'
 
 export interface CallToAction {
   label: string
@@ -54,7 +54,7 @@ export interface LandingContent {
   processSection: SectionIntro
   process: ProcessStep[]
   technologiesSection: SectionIntro
-  technologies: Technology[]
+  technologies: TechnologyCategory[]
   caseStudiesSection: SectionIntro
   caseStudies: CaseStudy[]
   video: {

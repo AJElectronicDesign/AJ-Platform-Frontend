@@ -97,7 +97,7 @@ export const landingContent: LandingContent = {
     eyebrow: 'Process',
     title: 'A clear path from idea to delivery',
     description:
-      'A structured engineering process that keeps projects predictable and production-ready.',
+      'Two engineering phases that keep every project predictable — from definition to production-ready delivery.',
   },
   process: [
     {
@@ -133,19 +133,39 @@ export const landingContent: LandingContent = {
   ],
   technologiesSection: {
     eyebrow: 'Technologies',
-    title: 'Tools and platforms we work with',
+    title: 'Technology across the entire product lifecycle',
     description:
-      'A modern engineering stack for electronics, embedded systems and digital products.',
+      'A modern engineering stack spanning electronics, embedded systems, applications and cloud.',
   },
   technologies: [
-    { id: 'pcb-design', name: 'PCB Design' },
-    { id: 'embedded-linux', name: 'Embedded Linux' },
-    { id: 'ble', name: 'BLE' },
-    { id: 'iot', name: 'IoT' },
-    { id: 'flutter', name: 'Flutter' },
-    { id: 'nodejs', name: 'Node.js' },
-    { id: 'aws', name: 'AWS' },
-    { id: 'databases', name: 'Databases' },
+    {
+      id: 'hardware-embedded',
+      title: 'Hardware & Embedded',
+      technologies: [
+        { id: 'pcb-design', name: 'PCB Design', icon: 'pcb' },
+        { id: 'embedded-linux', name: 'Embedded Linux', icon: 'linux' },
+        { id: 'ble', name: 'BLE', icon: 'ble' },
+        { id: 'iot', name: 'IoT', icon: 'iot' },
+      ],
+    },
+    {
+      id: 'software',
+      title: 'Software',
+      technologies: [
+        { id: 'flutter', name: 'Flutter', icon: 'flutter' },
+        { id: 'react', name: 'React', icon: 'react' },
+        { id: 'nodejs', name: 'Node.js', icon: 'nodejs' },
+      ],
+    },
+    {
+      id: 'cloud-data',
+      title: 'Cloud & Data',
+      technologies: [
+        { id: 'aws', name: 'AWS', icon: 'aws' },
+        { id: 'databases', name: 'Databases', icon: 'database' },
+        { id: 'apis', name: 'APIs', icon: 'api' },
+      ],
+    },
   ],
   caseStudiesSection: {
     eyebrow: 'Case studies',
@@ -161,7 +181,8 @@ export const landingContent: LandingContent = {
         'End-to-end hardware, firmware and cloud connectivity for industrial monitoring.',
       industry: 'Industrial',
       outcome: 'Production-ready units delivered with validated firmware.',
-      imageAlt: 'Abstract visual for industrial IoT gateway case study',
+      imageAlt: 'Industrial IoT gateway hardware and connectivity visual',
+      imageKey: 'iotGateway',
     },
     {
       id: 'connected-device',
@@ -170,7 +191,8 @@ export const landingContent: LandingContent = {
         'Product development covering industrial design, electronics and mobile experience.',
       industry: 'Consumer',
       outcome: 'Prototype validated and prepared for low-volume manufacture.',
-      imageAlt: 'Abstract visual for connected consumer device case study',
+      imageAlt: 'Connected consumer device prototype visual',
+      imageKey: 'connectedDevice',
     },
   ],
   video: {

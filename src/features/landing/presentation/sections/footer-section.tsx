@@ -2,6 +2,8 @@ import { brand } from '@/shared/constants/brand'
 import { publicNavigation } from '@/shared/constants/navigation'
 import { Container } from '@/shared/components/container'
 import { AppLogo } from '@/shared/components/app-logo'
+import { AppColorClasses, AppTextStyles } from '@/shared/theme'
+import { cn } from '@/shared/utils/cn'
 
 export interface FooterSectionProps {
   copyright: string
@@ -17,27 +19,28 @@ export function FooterSection({
   location,
 }: FooterSectionProps) {
   return (
-    <footer className="border-t border-border bg-white">
+    <footer
+      className={cn(
+        'relative border-t',
+        AppColorClasses.border.DEFAULT,
+        AppColorClasses.bg.surface,
+      )}
+    >
       <Container className="py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
             <AppLogo />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-muted">
+            <p className={cn(AppTextStyles.bodySm, 'mt-4 max-w-xs')}>
               {brand.tagline}
             </p>
           </div>
 
           <div>
-            <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-brand-700">
-              Navigate
-            </p>
+            <p className={AppTextStyles.microLabel}>Navigate</p>
             <ul className="mt-4 space-y-2.5">
               {publicNavigation.map((item) => (
                 <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="text-sm text-ink-muted transition-colors hover:text-brand-700"
-                  >
+                  <a href={item.href} className={AppTextStyles.link}>
                     {item.label}
                   </a>
                 </li>
@@ -46,10 +49,8 @@ export function FooterSection({
           </div>
 
           <div>
-            <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-brand-700">
-              Contact
-            </p>
-            <ul className="mt-4 space-y-2.5 text-sm text-ink-muted">
+            <p className={AppTextStyles.microLabel}>Contact</p>
+            <ul className={cn('mt-4 space-y-2.5', AppTextStyles.bodySm)}>
               <li>
                 <a
                   href={`mailto:${email}`}
@@ -64,16 +65,14 @@ export function FooterSection({
           </div>
 
           <div>
-            <p className="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-brand-700">
-              Social
-            </p>
+            <p className={AppTextStyles.microLabel}>Social</p>
             <ul className="mt-4 space-y-2.5">
               <li>
                 <a
                   href={brand.social.linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm text-ink-muted transition-colors hover:text-brand-700"
+                  className={AppTextStyles.link}
                 >
                   LinkedIn
                 </a>
@@ -83,7 +82,7 @@ export function FooterSection({
                   href={brand.social.github}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm text-ink-muted transition-colors hover:text-brand-700"
+                  className={AppTextStyles.link}
                 >
                   GitHub
                 </a>
@@ -93,7 +92,7 @@ export function FooterSection({
                   href={brand.social.youtube}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-sm text-ink-muted transition-colors hover:text-brand-700"
+                  className={AppTextStyles.link}
                 >
                   YouTube
                 </a>
@@ -102,9 +101,14 @@ export function FooterSection({
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-ink-muted">{copyright}</p>
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-ink-subtle">
+        <div
+          className={cn(
+            'mt-12 flex flex-col gap-3 border-t pt-6 sm:flex-row sm:items-center sm:justify-between',
+            AppColorClasses.border.DEFAULT,
+          )}
+        >
+          <p className={AppTextStyles.bodySm}>{copyright}</p>
+          <p className={cn(AppTextStyles.microLabel, AppColorClasses.text.inkSubtle)}>
             {brand.platformName}
           </p>
         </div>
