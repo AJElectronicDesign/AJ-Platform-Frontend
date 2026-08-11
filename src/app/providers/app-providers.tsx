@@ -5,6 +5,8 @@ export interface AppProvidersProps {
   children: ReactNode
 }
 
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+
 export function AppProviders({ children }: AppProvidersProps) {
-  return <BrowserRouter>{children}</BrowserRouter>
+  return <BrowserRouter basename={routerBasename}>{children}</BrowserRouter>
 }

@@ -61,7 +61,10 @@ export function PublicLayout() {
                 Log in
               </Button>
             </Link>
-            <a href="/#contact" className="hidden md:inline-flex">
+            <a
+              href={`${import.meta.env.BASE_URL}#contact`}
+              className="hidden md:inline-flex"
+            >
               <Button size="sm">Request a quotation</Button>
             </a>
 
@@ -141,7 +144,11 @@ export function PublicLayout() {
                 Log in
               </Button>
             </Link>
-            <a href="/#contact" onClick={closeMenu} className="mt-2 md:hidden">
+            <a
+              href={`${import.meta.env.BASE_URL}#contact`}
+              onClick={closeMenu}
+              className="mt-2 md:hidden"
+            >
               <Button className="w-full">Request a quotation</Button>
             </a>
           </Container>
