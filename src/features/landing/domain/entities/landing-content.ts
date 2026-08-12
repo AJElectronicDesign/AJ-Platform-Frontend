@@ -1,4 +1,4 @@
-import type { CaseStudy } from './case-study'
+import type { ClientLogo } from './client-logo'
 import type { ContactInfo } from './contact-info'
 import type { Service } from './service'
 import type { TechnologyCategory } from './technology'
@@ -22,22 +22,15 @@ export interface HeroContent {
   highlights: HeroHighlight[]
 }
 
-export interface ValuePillar {
-  id: string
-  title: string
-  description: string
-}
-
-export interface ValuePropositionContent {
-  title: string
-  description: string
-  pillars: ValuePillar[]
-}
-
 export interface SectionIntro {
   eyebrow: string
   title: string
   description: string
+}
+
+export interface TechnologiesSectionContent extends SectionIntro {
+  /** Compact product-layer sequence shown above the technology groups. */
+  pipeline: string[]
 }
 
 export interface ProcessStep {
@@ -46,17 +39,23 @@ export interface ProcessStep {
   description: string
 }
 
+export interface TeamSectionContent {
+  title: string
+  description: string
+  imageAlt: string
+}
+
 export interface LandingContent {
   hero: HeroContent
-  valueProposition: ValuePropositionContent
+  clientsSection: SectionIntro
+  clients: ClientLogo[]
   servicesSection: SectionIntro
   services: Service[]
+  teamSection: TeamSectionContent
   processSection: SectionIntro
   process: ProcessStep[]
-  technologiesSection: SectionIntro
+  technologiesSection: TechnologiesSectionContent
   technologies: TechnologyCategory[]
-  caseStudiesSection: SectionIntro
-  caseStudies: CaseStudy[]
   video: {
     title: string
     description: string

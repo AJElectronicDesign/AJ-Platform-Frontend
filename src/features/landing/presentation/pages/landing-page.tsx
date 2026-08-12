@@ -1,11 +1,10 @@
-import { CaseStudiesSection } from '@/features/landing/presentation/sections/case-studies-section'
+import { ClientsSection } from '@/features/landing/presentation/sections/clients-section'
 import { ContactSection } from '@/features/landing/presentation/sections/contact-section'
 import { FooterSection } from '@/features/landing/presentation/sections/footer-section'
 import { HeroSection } from '@/features/landing/presentation/sections/hero-section'
-import { ProcessSection } from '@/features/landing/presentation/sections/process-section'
 import { ServicesSection } from '@/features/landing/presentation/sections/services-section'
+import { TeamSection } from '@/features/landing/presentation/sections/team-section'
 import { TechnologiesSection } from '@/features/landing/presentation/sections/technologies-section'
-import { ValuePropositionSection } from '@/features/landing/presentation/sections/value-proposition-section'
 import { VideoSection } from '@/features/landing/presentation/sections/video-section'
 import { useLandingContent } from '@/features/landing/presentation/hooks/use-landing-content'
 import { Container } from '@/shared/components/container'
@@ -41,19 +40,18 @@ export function LandingPage() {
   return (
     <>
       <HeroSection content={content.hero} />
-      <ValuePropositionSection content={content.valueProposition} />
+      <ClientsSection
+        intro={content.clientsSection}
+        clients={content.clients}
+      />
       <ServicesSection
         intro={content.servicesSection}
         services={content.services}
       />
-      <ProcessSection intro={content.processSection} steps={content.process} />
+      <TeamSection content={content.teamSection} />
       <TechnologiesSection
         intro={content.technologiesSection}
         technologies={content.technologies}
-      />
-      <CaseStudiesSection
-        intro={content.caseStudiesSection}
-        caseStudies={content.caseStudies}
       />
       <VideoSection content={content.video} />
       <ContactSection

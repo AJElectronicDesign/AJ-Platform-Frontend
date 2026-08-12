@@ -7,5 +7,7 @@ export interface Technology {
 export interface TechnologyCategory {
   id: string
   title: string
+  description: string
+  icon: string
   technologies: Technology[]
 }

@@ -55,11 +55,15 @@ export function PublicLayout() {
             })}
           </nav>
 
-          <div className="flex items-center gap-2">
-            <Link to="/login" className="hidden sm:inline-flex">
-              <Button size="sm" variant="secondary">
-                Log in
-              </Button>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              to="/login"
+              className={cn(
+                AppTextStyles.navLink,
+                'hidden sm:inline-flex',
+              )}
+            >
+              Portal Access
             </Link>
             <a
               href={`${import.meta.env.BASE_URL}#contact`}
@@ -139,11 +143,6 @@ export function PublicLayout() {
                 </a>
               )
             })}
-            <Link to="/login" onClick={closeMenu} className="mt-2">
-              <Button variant="secondary" className="w-full">
-                Log in
-              </Button>
-            </Link>
             <a
               href={`${import.meta.env.BASE_URL}#contact`}
               onClick={closeMenu}
@@ -151,6 +150,17 @@ export function PublicLayout() {
             >
               <Button className="w-full">Request a quotation</Button>
             </a>
+            <Link
+              to="/login"
+              onClick={closeMenu}
+              className={cn(
+                'mt-2 rounded-xl border px-3 py-3 text-center text-sm font-medium transition-colors',
+                AppColorClasses.border.DEFAULT,
+                'text-ink-muted hover:border-brand-200 hover:bg-brand-50 hover:text-brand-800',
+              )}
+            >
+              Portal Access
+            </Link>
           </Container>
         </div>
       </header>

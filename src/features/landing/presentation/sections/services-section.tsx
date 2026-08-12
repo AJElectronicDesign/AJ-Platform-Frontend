@@ -1,6 +1,8 @@
+import { useRef, useState } from 'react'
 import type { SectionIntro } from '@/features/landing/domain/entities/landing-content'
 import type { Service } from '@/features/landing/domain/entities/service'
 import { ServiceCard } from '@/features/landing/presentation/components/service-card'
+import { ServiceDetailsDialog } from '@/features/landing/presentation/components/service-details-dialog'
 import { Container } from '@/shared/components/container'
 import { SectionHeader } from '@/shared/components/section-header'
 import { AppColorClasses, AppGradients } from '@/shared/theme'
@@ -12,11 +14,37 @@ export interface ServicesSectionProps {
 }
 
 export function ServicesSection({ intro, services }: ServicesSectionProps) {
+  const [selectedService, setSelectedService] = useState<Service | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [restoreFocus, setRestoreFocus] = useState(true)
+  const returnFocusRef = useRef<HTMLElement | null>(null)
+
+  function openServiceDialog(service: Service, trigger: HTMLButtonElement) {
+    returnFocusRef.current = trigger
+    setRestoreFocus(true)
+    setSelectedService(service)
+    setIsDialogOpen(true)
+  }
+
+  function closeServiceDialog() {
+    setIsDialogOpen(false)
+  }
+
+  function requestQuotation() {
+    setRestoreFocus(false)
+    closeServiceDialog()
+    window.setTimeout(() => {
+      document
+        .getElementById('contact')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 0)
+  }
+
   return (
     <section
       id="services"
       className={cn(
-        'relative scroll-mt-24 overflow-hidden py-20 sm:py-24',
+        'relative scroll-mt-24 overflow-hidden py-16 sm:py-20',
         AppGradients.surfaceAqua,
       )}
     >
@@ -28,7 +56,7 @@ export function ServicesSection({ intro, services }: ServicesSectionProps) {
           title={intro.title}
           description={intro.description}
         />
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
+        <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-6 lg:gap-5">
           {services.map((service, index) => (
             <div
               key={service.id}
@@ -36,7 +64,10 @@ export function ServicesSection({ intro, services }: ServicesSectionProps) {
                 index === 3 ? 'lg:col-span-2 lg:col-start-2' : 'lg:col-span-2'
               }
             >
-              <ServiceCard service={service} />
+              <ServiceCard
+                service={service}
+                onLearnMore={openServiceDialog}
+              />
             </div>
           ))}
         </div>
@@ -49,6 +80,15 @@ export function ServicesSection({ intro, services }: ServicesSectionProps) {
           'bg-brand-100',
         )}
         aria-hidden="true"
+      />
+
+      <ServiceDetailsDialog
+        service={selectedService}
+        open={isDialogOpen}
+        onClose={closeServiceDialog}
+        onRequestQuotation={requestQuotation}
+        returnFocusRef={returnFocusRef}
+        restoreFocus={restoreFocus}
       />
     </section>
   )

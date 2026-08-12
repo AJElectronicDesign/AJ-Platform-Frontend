@@ -6,7 +6,6 @@ import {
   AppRadius,
   AppTextStyles,
   resolveAppIcon,
-  type AppIconKey,
 } from '@/shared/theme'
 import { Card } from '@/shared/ui/card'
 import { cn } from '@/shared/utils/cn'
@@ -15,25 +14,15 @@ export interface TechnologyCategoryCardProps {
   category: TechnologyCategory
 }
 
-const categoryIcons: Record<string, AppIconKey> = {
-  'hardware-embedded': 'hardware',
-  software: 'software',
-  'cloud-data': 'cloud',
-}
-
 export function TechnologyCategoryCard({
   category,
 }: TechnologyCategoryCardProps) {
-  const CategoryIcon =
-    AppIcons[categoryIcons[category.id] ?? 'circle']
+  const CategoryIcon = AppIcons[resolveAppIcon(category.icon)]
 
   return (
     <Card className="group relative h-full p-0">
       <div className="overflow-hidden rounded-[inherit]">
-        <div
-          className="h-1 bg-brand-600"
-          aria-hidden="true"
-        />
+        <div className="h-1 bg-brand-600" aria-hidden="true" />
 
         <div className="flex items-start gap-3 px-5 pb-4 pt-5 sm:px-6">
           <IconFrame
@@ -46,8 +35,8 @@ export function TechnologyCategoryCard({
 
           <div className="min-w-0">
             <h3 className={AppTextStyles.h3}>{category.title}</h3>
-            <p className={cn(AppTextStyles.microLabel, 'mt-1.5')}>
-              {String(category.technologies.length).padStart(2, '0')} capabilities
+            <p className={cn(AppTextStyles.bodySm, 'mt-1.5')}>
+              {category.description}
             </p>
           </div>
         </div>

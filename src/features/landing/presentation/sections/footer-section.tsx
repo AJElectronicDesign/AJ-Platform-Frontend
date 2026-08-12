@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { brand } from '@/shared/constants/brand'
 import { publicNavigation } from '@/shared/constants/navigation'
 import { Container } from '@/shared/components/container'
@@ -45,6 +46,11 @@ export function FooterSection({
                   </a>
                 </li>
               ))}
+              <li>
+                <Link to="/login" className={AppTextStyles.link}>
+                  Portal Access
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -108,7 +114,12 @@ export function FooterSection({
           )}
         >
           <p className={AppTextStyles.bodySm}>{copyright}</p>
-          <p className={cn(AppTextStyles.microLabel, AppColorClasses.text.inkSubtle)}>
+          <p
+            className={cn(
+              AppTextStyles.microLabel,
+              AppColorClasses.text.inkSubtle,
+            )}
+          >
             {brand.platformName}
           </p>
         </div>

@@ -21,10 +21,7 @@ export function AppLogo({ className, tone = 'light' }: AppLogoProps) {
       <img
         src={AppImages.brand.logo}
         alt={`${brand.name} logo`}
-        className={cn(
-          'h-9 w-9 rounded-full object-cover sm:h-10 sm:w-10',
-          tone === 'dark' ? 'ring-1 ring-white/20' : 'ring-1 ring-border/70',
-        )}
+        className="h-9 w-9 overflow-hidden rounded-full object-cover sm:h-10 sm:w-10"
       />
       <span className="text-[0.95rem]">{brand.name}</span>
     </Link>

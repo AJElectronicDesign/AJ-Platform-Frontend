@@ -22,7 +22,7 @@ export function ContactSection({ intro, contact }: ContactSectionProps) {
     <section
       id="contact"
       className={cn(
-        'relative scroll-mt-24 overflow-hidden py-20 sm:py-24',
+        'relative scroll-mt-24 overflow-hidden py-16 sm:py-20',
         AppGradients.surfaceAqua,
       )}
     >
