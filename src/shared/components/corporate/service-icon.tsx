@@ -1,8 +1,5 @@
-import {
-  AppIcons,
-  resolveAppIcon,
-} from '@/shared/theme'
 import { IconFrame } from '@/shared/components/icon-frame'
+import { AppIcons, resolveAppIcon } from '@/shared/theme'
 import { cn } from '@/shared/utils/cn'
 
 export interface ServiceIconProps {

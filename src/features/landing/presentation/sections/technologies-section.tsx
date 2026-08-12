@@ -1,6 +1,6 @@
 import type { TechnologiesSectionContent } from '@/features/landing/domain/entities/landing-content'
-import type { TechnologyCategory } from '@/features/landing/domain/entities/technology'
-import { TechnologyCategoryCard } from '@/features/landing/presentation/components/technology-category-card'
+import type { TechnologyCategory } from '@/shared/corporate-content'
+import { TechnologiesGrid } from '@/shared/components/corporate/technologies-grid'
 import { Container } from '@/shared/components/container'
 import { SectionHeader } from '@/shared/components/section-header'
 import { AppColorClasses, AppGradients, AppShadows } from '@/shared/theme'
@@ -62,11 +62,7 @@ export function TechnologiesSection({
           ))}
         </ol>
 
-        <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
-          {technologies.map((category) => (
-            <TechnologyCategoryCard key={category.id} category={category} />
-          ))}
-        </div>
+        <TechnologiesGrid className="mt-10 sm:mt-12" technologies={technologies} />
       </Container>
 
       <div

@@ -1,7 +1,10 @@
-import type { ClientLogo } from './client-logo'
 import type { ContactInfo } from './contact-info'
-import type { Service } from './service'
-import type { TechnologyCategory } from './technology'
+import type {
+  ClientLogo,
+  ProcessStep,
+  Service,
+  TechnologyCategory,
+} from '@/shared/corporate-content'
 
 export interface CallToAction {
   label: string
@@ -29,14 +32,7 @@ export interface SectionIntro {
 }
 
 export interface TechnologiesSectionContent extends SectionIntro {
-  /** Compact product-layer sequence shown above the technology groups. */
   pipeline: string[]
-}
-
-export interface ProcessStep {
-  id: string
-  label: string
-  description: string
 }
 
 export interface TeamSectionContent {
@@ -65,9 +61,6 @@ export interface LandingContent {
   }
   contactSection: SectionIntro
   contact: ContactInfo
-  footer: {
-    copyright: string
-  }
 }
 
 export interface LandingContentRepository {

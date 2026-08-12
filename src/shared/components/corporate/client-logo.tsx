@@ -1,4 +1,4 @@
-import type { ClientLogo as ClientLogoEntity } from '@/features/landing/domain/entities/client-logo'
+import type { ClientLogo as ClientLogoEntity } from '@/shared/corporate-content'
 import { AppImages } from '@/shared/theme'
 import { cn } from '@/shared/utils/cn'
 
@@ -25,7 +25,6 @@ export function ClientLogo({ client }: ClientLogoProps) {
         decoding="async"
         className={cn(
           'max-h-9 w-auto max-w-full object-contain sm:max-h-10',
-          // Slight edge definition so bright logos (e.g. NXP) stay readable on white.
           'drop-shadow-[0_1px_1px_rgba(15,23,42,0.12)]',
         )}
       />

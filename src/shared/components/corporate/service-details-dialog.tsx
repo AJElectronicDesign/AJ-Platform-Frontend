@@ -1,6 +1,7 @@
 import type { RefObject } from 'react'
-import type { Service } from '@/features/landing/domain/entities/service'
-import { ServiceIcon } from '@/features/landing/presentation/components/service-icon'
+import type { Service } from '@/shared/corporate-content'
+import { ServiceIcon } from '@/shared/components/corporate/service-icon'
+import { useI18n } from '@/shared/i18n'
 import { AppTextStyles } from '@/shared/theme'
 import { Button } from '@/shared/ui/button'
 import { Dialog } from '@/shared/ui/dialog'
@@ -23,6 +24,8 @@ export function ServiceDetailsDialog({
   returnFocusRef,
   restoreFocus = true,
 }: ServiceDetailsDialogProps) {
+  const { t } = useI18n()
+
   if (!service) {
     return null
   }
@@ -44,7 +47,7 @@ export function ServiceDetailsDialog({
         </div>
 
         <section>
-          <h3 className={AppTextStyles.microLabel}>What we do</h3>
+          <h3 className={AppTextStyles.microLabel}>{t.common.whatWeDo}</h3>
           <ul className={cn(AppTextStyles.bodySm, 'mt-3 list-disc space-y-1.5 pl-5')}>
             {service.details.capabilities.map((item) => (
               <li key={item}>{item}</li>
@@ -53,7 +56,9 @@ export function ServiceDetailsDialog({
         </section>
 
         <section>
-          <h3 className={AppTextStyles.microLabel}>Typical deliverables</h3>
+          <h3 className={AppTextStyles.microLabel}>
+            {t.common.typicalDeliverables}
+          </h3>
           <ul className={cn(AppTextStyles.bodySm, 'mt-3 list-disc space-y-1.5 pl-5')}>
             {service.details.deliverables.map((item) => (
               <li key={item}>{item}</li>
@@ -64,7 +69,9 @@ export function ServiceDetailsDialog({
         {service.details.technologies &&
         service.details.technologies.length > 0 ? (
           <section>
-            <h3 className={AppTextStyles.microLabel}>Related technologies</h3>
+            <h3 className={AppTextStyles.microLabel}>
+              {t.common.relatedTechnologies}
+            </h3>
             <ul className="mt-3 flex flex-wrap gap-2">
               {service.details.technologies.map((tech) => (
                 <li
@@ -82,8 +89,12 @@ export function ServiceDetailsDialog({
         ) : null}
 
         <div className="pt-1">
-          <Button type="button" className="w-full sm:w-auto" onClick={onRequestQuotation}>
-            Request a quotation
+          <Button
+            type="button"
+            className="w-full sm:w-auto"
+            onClick={onRequestQuotation}
+          >
+            {t.common.requestQuotation}
           </Button>
         </div>
       </div>

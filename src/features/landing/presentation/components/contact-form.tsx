@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { sendContactMessage } from '@/features/landing/application/use-cases/send-contact-message'
 import { emailJsContactSender } from '@/features/landing/infrastructure/services/emailjs-contact-sender'
 import { brand } from '@/shared/constants/brand'
+import { useI18n } from '@/shared/i18n'
 import {
   AppColorClasses,
   AppRadius,
@@ -14,6 +15,8 @@ import { Textarea } from '@/shared/ui/textarea'
 import { cn } from '@/shared/utils/cn'
 
 export function ContactForm() {
+  const { t } = useI18n()
+  const copy = t.home.contactForm
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -29,6 +32,12 @@ export function ContactForm() {
     setIsSubmitting(true)
     setFeedback(null)
 
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      setFeedback({ type: 'error', text: copy.validationError })
+      setIsSubmitting(false)
+      return
+    }
+
     const result = await sendContactMessage(emailJsContactSender, {
       name,
       email,
@@ -38,7 +47,7 @@ export function ContactForm() {
 
     setFeedback({
       type: result.success ? 'success' : 'error',
-      text: result.message,
+      text: result.success ? copy.success : copy.sendError,
     })
 
     if (result.success) {
@@ -65,11 +74,11 @@ export function ContactForm() {
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block space-y-2 text-sm">
-          <span className={AppTextStyles.label}>Name</span>
+          <span className={AppTextStyles.label}>{copy.name}</span>
           <Input
             name="name"
             autoComplete="name"
-            placeholder="Your name"
+            placeholder={copy.namePlaceholder}
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
@@ -77,12 +86,12 @@ export function ContactForm() {
           />
         </label>
         <label className="block space-y-2 text-sm">
-          <span className={AppTextStyles.label}>Email</span>
+          <span className={AppTextStyles.label}>{copy.email}</span>
           <Input
             name="email"
             type="email"
             autoComplete="email"
-            placeholder="you@company.com"
+            placeholder={copy.emailPlaceholder}
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
@@ -91,22 +100,22 @@ export function ContactForm() {
         </label>
       </div>
       <label className="block space-y-2 text-sm">
-        <span className={AppTextStyles.label}>Phone</span>
+        <span className={AppTextStyles.label}>{copy.phone}</span>
         <Input
           name="phone"
           type="tel"
           autoComplete="tel"
-          placeholder="+52 (33) 0000 0000"
+          placeholder={copy.phonePlaceholder}
           value={phone}
           onChange={(event) => setPhone(event.target.value)}
           disabled={isSubmitting}
         />
       </label>
       <label className="block space-y-2 text-sm">
-        <span className={AppTextStyles.label}>Message</span>
+        <span className={AppTextStyles.label}>{copy.message}</span>
         <Textarea
           name="message"
-          placeholder="Tell us about your project, timeline and goals"
+          placeholder={copy.messagePlaceholder}
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           required
@@ -129,7 +138,7 @@ export function ContactForm() {
         </p>
       ) : (
         <p className={cn(AppTextStyles.caption, AppColorClasses.text.inkSubtle)}>
-          Your request will be sent to {brand.contact.email}.
+          {copy.sentTo} {brand.contact.email}.
         </p>
       )}
 
@@ -140,7 +149,7 @@ export function ContactForm() {
           className="w-full sm:w-auto"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Sending...' : 'Request a quotation'}
+          {isSubmitting ? copy.sending : t.common.requestQuotation}
         </Button>
       </div>
     </form>

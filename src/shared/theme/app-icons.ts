@@ -460,6 +460,58 @@ const CloudIcon = createIcon(
   }),
 )
 
+const GlobeIcon = createIcon([
+  createElement('circle', {
+    key: 'globe',
+    cx: 12,
+    cy: 12,
+    r: 8,
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+  }),
+  createElement('path', {
+    key: 'meridian',
+    d: 'M12 4c2.2 2.2 3.2 4.8 3.2 8s-1 5.8-3.2 8c-2.2-2.2-3.2-4.8-3.2-8s1-5.8 3.2-8Z',
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+  }),
+  createElement('path', {
+    key: 'parallels',
+    d: 'M4.8 9.5h14.4M4.8 14.5h14.4',
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinecap: 'round',
+  }),
+])
+
+const UserIcon = createIcon([
+  createElement('circle', {
+    key: 'head',
+    cx: 12,
+    cy: 9,
+    r: 3.2,
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+  }),
+  createElement('path', {
+    key: 'body',
+    d: 'M6.2 18.5c.8-2.8 3-4.3 5.8-4.3s5 1.5 5.8 4.3',
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinecap: 'round',
+  }),
+])
+
+const ChevronDownIcon = createIcon(
+  createElement('path', {
+    d: 'M6.5 9.5 12 15l5.5-5.5',
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+  }),
+)
+
 /**
  * Centralized icon catalog — similar to Flutter `AppIcons`.
  */
@@ -487,6 +539,9 @@ export const AppIcons = {
   connectivity: ConnectivityIcon,
   applications: ApplicationsIcon,
   cloud: CloudIcon,
+  globe: GlobeIcon,
+  user: UserIcon,
+  chevronDown: ChevronDownIcon,
 } as const
 
 export const AppIconNames = {
@@ -513,6 +568,9 @@ export const AppIconNames = {
   connectivity: 'connectivity',
   applications: 'applications',
   cloud: 'cloud',
+  globe: 'globe',
+  user: 'user',
+  chevronDown: 'chevron-down',
 } as const
 
 export type AppIconKey = keyof typeof AppIcons

@@ -1,24 +1,20 @@
 import { Link } from 'react-router-dom'
-import { brand } from '@/shared/constants/brand'
-import { publicNavigation } from '@/shared/constants/navigation'
-import { Container } from '@/shared/components/container'
 import { AppLogo } from '@/shared/components/app-logo'
+import { Container } from '@/shared/components/container'
+import { brand } from '@/shared/constants/brand'
+import {
+  contactNavItem,
+  getVisibleNavGroups,
+  myAjHref,
+} from '@/shared/constants/navigation'
+import { useI18n } from '@/shared/i18n'
 import { AppColorClasses, AppTextStyles } from '@/shared/theme'
 import { cn } from '@/shared/utils/cn'
 
-export interface FooterSectionProps {
-  copyright: string
-  email: string
-  phone: string
-  location: string
-}
+export function SiteFooter() {
+  const { t } = useI18n()
+  const groups = getVisibleNavGroups()
 
-export function FooterSection({
-  copyright,
-  email,
-  phone,
-  location,
-}: FooterSectionProps) {
   return (
     <footer
       className={cn(
@@ -37,41 +33,53 @@ export function FooterSection({
           </div>
 
           <div>
-            <p className={AppTextStyles.microLabel}>Navigate</p>
+            <p className={AppTextStyles.microLabel}>{t.common.navigate}</p>
             <ul className="mt-4 space-y-2.5">
-              {publicNavigation.map((item) => (
-                <li key={item.href}>
-                  <a href={item.href} className={AppTextStyles.link}>
-                    {item.label}
-                  </a>
+              {groups.map((group) => (
+                <li key={group.id}>
+                  <Link to={group.to} className={AppTextStyles.link}>
+                    {t.navigation[group.labelKey]}
+                  </Link>
                 </li>
               ))}
               <li>
-                <Link to="/login" className={AppTextStyles.link}>
-                  Portal Access
+                <Link to={contactNavItem.to} className={AppTextStyles.link}>
+                  {t.navigation.contact}
+                </Link>
+              </li>
+              <li>
+                <Link to={myAjHref} className={AppTextStyles.link}>
+                  {t.common.myAj}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <p className={AppTextStyles.microLabel}>Contact</p>
+            <p className={AppTextStyles.microLabel}>{t.common.contact}</p>
             <ul className={cn('mt-4 space-y-2.5', AppTextStyles.bodySm)}>
               <li>
                 <a
-                  href={`mailto:${email}`}
+                  href={`mailto:${brand.contact.email}`}
                   className="transition-colors hover:text-brand-700"
                 >
-                  {email}
+                  {brand.contact.email}
                 </a>
               </li>
-              <li>{phone}</li>
-              <li>{location}</li>
+              <li>
+                <a
+                  href={`tel:${brand.contact.phone.replace(/[^\d+]/g, '')}`}
+                  className="transition-colors hover:text-brand-700"
+                >
+                  {brand.contact.phone}
+                </a>
+              </li>
+              <li>{brand.contact.location}</li>
             </ul>
           </div>
 
           <div>
-            <p className={AppTextStyles.microLabel}>Social</p>
+            <p className={AppTextStyles.microLabel}>{t.common.social}</p>
             <ul className="mt-4 space-y-2.5">
               <li>
                 <a
@@ -113,7 +121,7 @@ export function FooterSection({
             AppColorClasses.border.DEFAULT,
           )}
         >
-          <p className={AppTextStyles.bodySm}>{copyright}</p>
+          <p className={AppTextStyles.bodySm}>{t.common.copyright}</p>
           <p
             className={cn(
               AppTextStyles.microLabel,

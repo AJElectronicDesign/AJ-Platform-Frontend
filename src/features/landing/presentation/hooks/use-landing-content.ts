@@ -1,51 +1,16 @@
-import { useEffect, useState } from 'react'
-import { getLandingContent } from '@/features/landing/application/use-cases/get-landing-content'
+import { useMemo } from 'react'
+import { assembleLandingContent } from '@/features/landing/application/assemble-landing-content'
 import type { LandingContent } from '@/features/landing/domain/entities/landing-content'
-import { landingContentRepository } from '@/features/landing/infrastructure/repositories/landing-content-repository'
+import { useI18n } from '@/shared/i18n'
 
 interface UseLandingContentResult {
-  content: LandingContent | null
-  isLoading: boolean
-  error: string | null
+  content: LandingContent
 }
 
 export function useLandingContent(): UseLandingContentResult {
-  const [content, setContent] = useState<LandingContent | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { t } = useI18n()
 
-  useEffect(() => {
-    let isMounted = true
+  const content = useMemo(() => assembleLandingContent(t.home), [t.home])
 
-    async function loadContent() {
-      try {
-        const result = await getLandingContent(landingContentRepository)
-
-        if (!isMounted) {
-          return
-        }
-
-        setContent(result)
-        setError(null)
-      } catch {
-        if (!isMounted) {
-          return
-        }
-
-        setError('Unable to load landing content.')
-      } finally {
-        if (isMounted) {
-          setIsLoading(false)
-        }
-      }
-    }
-
-    void loadContent()
-
-    return () => {
-      isMounted = false
-    }
-  }, [])
-
-  return { content, isLoading, error }
+  return { content }
 }

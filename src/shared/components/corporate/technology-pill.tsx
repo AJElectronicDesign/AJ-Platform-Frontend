@@ -1,4 +1,4 @@
-import type { Technology } from '@/features/landing/domain/entities/technology'
+import type { Technology } from '@/shared/corporate-content'
 import {
   AppColorClasses,
   AppIcons,
@@ -13,7 +13,6 @@ export interface TechnologyPillProps {
   className?: string
 }
 
-/** Compact tech chip — kept for reuse outside the category cards. */
 export function TechnologyPill({ technology, className }: TechnologyPillProps) {
   const Icon = AppIcons[resolveAppIcon(technology.icon)]
 

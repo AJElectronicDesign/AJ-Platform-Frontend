@@ -138,6 +138,10 @@
     animation-range: entry 8% cover 28%;
   }
 
+  .mega-menu-panel {
+    animation: mega-menu-in 180ms ease-out both;
+  }
+
   /**
    * Exterior-only teal→aqua aura.
    * Aura is a sibling BEHIND an opaque face — never paints into content.
@@ -188,6 +192,18 @@
   }
 }
 
+@keyframes mega-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -197,7 +213,8 @@
   .fade-up-delay-1,
   .fade-up-delay-2,
   .fade-up-delay-3,
-  .reveal-on-scroll {
+  .reveal-on-scroll,
+  .mega-menu-panel {
     animation: none;
   }
 

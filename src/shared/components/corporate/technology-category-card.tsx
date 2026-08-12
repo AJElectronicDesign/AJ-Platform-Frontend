@@ -1,4 +1,4 @@
-import type { TechnologyCategory } from '@/features/landing/domain/entities/technology'
+import type { TechnologyCategory } from '@/shared/corporate-content'
 import { IconFrame } from '@/shared/components/icon-frame'
 import {
   AppColorClasses,

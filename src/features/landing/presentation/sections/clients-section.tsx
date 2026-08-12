@@ -1,6 +1,6 @@
-import type { ClientLogo as ClientLogoEntity } from '@/features/landing/domain/entities/client-logo'
 import type { SectionIntro } from '@/features/landing/domain/entities/landing-content'
-import { ClientLogo } from '@/features/landing/presentation/components/client-logo'
+import type { ClientLogo as ClientLogoEntity } from '@/shared/corporate-content'
+import { ClientsGrid } from '@/shared/components/corporate/clients-grid'
 import { Container } from '@/shared/components/container'
 import { AppColorClasses, AppTextStyles } from '@/shared/theme'
 import { cn } from '@/shared/utils/cn'
@@ -29,13 +29,9 @@ export function ClientsSection({ intro, clients }: ClientsSectionProps) {
           </p>
         </div>
 
-        <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-6 sm:mt-10 sm:gap-x-10 lg:flex-nowrap lg:justify-between lg:gap-x-4">
-          {clients.map((client) => (
-            <li key={client.id}>
-              <ClientLogo client={client} />
-            </li>
-          ))}
-        </ul>
+        <div className="mt-8 sm:mt-10">
+          <ClientsGrid clients={clients} />
+        </div>
       </Container>
     </section>
   )

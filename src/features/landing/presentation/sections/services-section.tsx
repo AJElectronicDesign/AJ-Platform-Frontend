@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { SectionIntro } from '@/features/landing/domain/entities/landing-content'
-import type { Service } from '@/features/landing/domain/entities/service'
-import { ServiceCard } from '@/features/landing/presentation/components/service-card'
-import { ServiceDetailsDialog } from '@/features/landing/presentation/components/service-details-dialog'
+import type { Service } from '@/shared/corporate-content'
+import { ServiceDetailsDialog } from '@/shared/components/corporate/service-details-dialog'
+import { ServicesGrid } from '@/shared/components/corporate/services-grid'
 import { Container } from '@/shared/components/container'
 import { SectionHeader } from '@/shared/components/section-header'
+import { paths } from '@/shared/constants/paths'
 import { AppColorClasses, AppGradients } from '@/shared/theme'
 import { cn } from '@/shared/utils/cn'
 
@@ -14,6 +16,7 @@ export interface ServicesSectionProps {
 }
 
 export function ServicesSection({ intro, services }: ServicesSectionProps) {
+  const navigate = useNavigate()
   const [selectedService, setSelectedService] = useState<Service | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [restoreFocus, setRestoreFocus] = useState(true)
@@ -33,11 +36,7 @@ export function ServicesSection({ intro, services }: ServicesSectionProps) {
   function requestQuotation() {
     setRestoreFocus(false)
     closeServiceDialog()
-    window.setTimeout(() => {
-      document
-        .getElementById('contact')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 0)
+    navigate(paths.contact)
   }
 
   return (
@@ -56,21 +55,11 @@ export function ServicesSection({ intro, services }: ServicesSectionProps) {
           title={intro.title}
           description={intro.description}
         />
-        <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-6 lg:gap-5">
-          {services.map((service, index) => (
-            <div
-              key={service.id}
-              className={
-                index === 3 ? 'lg:col-span-2 lg:col-start-2' : 'lg:col-span-2'
-              }
-            >
-              <ServiceCard
-                service={service}
-                onLearnMore={openServiceDialog}
-              />
-            </div>
-          ))}
-        </div>
+        <ServicesGrid
+          className="mt-8 sm:mt-10"
+          services={services}
+          onLearnMore={openServiceDialog}
+        />
       </Container>
 
       <div

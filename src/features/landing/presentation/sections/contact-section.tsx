@@ -3,6 +3,7 @@ import type { SectionIntro } from '@/features/landing/domain/entities/landing-co
 import { ContactForm } from '@/features/landing/presentation/components/contact-form'
 import { Container } from '@/shared/components/container'
 import { SectionHeader } from '@/shared/components/section-header'
+import { useI18n } from '@/shared/i18n'
 import {
   AppColorClasses,
   AppGradients,
@@ -18,6 +19,7 @@ export interface ContactSectionProps {
 }
 
 export function ContactSection({ intro, contact }: ContactSectionProps) {
+  const { t } = useI18n()
   return (
     <section
       id="contact"
@@ -41,7 +43,7 @@ export function ContactSection({ intro, contact }: ContactSectionProps) {
               {(
                 [
                   {
-                    label: 'Email',
+                    label: t.common.email,
                     value: (
                       <a
                         href={`mailto:${contact.email}`}
@@ -52,7 +54,7 @@ export function ContactSection({ intro, contact }: ContactSectionProps) {
                     ),
                   },
                   {
-                    label: 'Phone',
+                    label: t.common.phone,
                     value: (
                       <a
                         href={`tel:${contact.phone.replace(/[^\d+]/g, '')}`}
@@ -63,7 +65,7 @@ export function ContactSection({ intro, contact }: ContactSectionProps) {
                     ),
                   },
                   {
-                    label: 'Location',
+                    label: t.common.location,
                     value: contact.location,
                   },
                 ] as const
