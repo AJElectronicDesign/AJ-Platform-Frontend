@@ -1,4 +1,7 @@
-import type { ClientLogo as ClientLogoEntity } from '@/shared/corporate-content'
+import type {
+  ClientLogo as ClientLogoEntity,
+  LandingClientLogoKey,
+} from '@/shared/corporate-content'
 import { AppImages } from '@/shared/theme'
 import { cn } from '@/shared/utils/cn'
 
@@ -6,28 +9,28 @@ export interface ClientLogoProps {
   client: ClientLogoEntity
 }
 
+/** Optical compensation: Intel’s swoosh and Biosense’s lighter wordmark read smaller at the same CSS height. */
+const logoHeightClass: Record<LandingClientLogoKey, string> = {
+  intel: 'h-14',
+  biosense: 'h-12',
+  bosch: 'h-9',
+  mabe: 'h-9',
+  nxp: 'h-9',
+}
+
 export function ClientLogo({ client }: ClientLogoProps) {
   return (
-    <div
+    <img
+      src={AppImages.landing.clients[client.logoKey]}
+      alt={client.alt}
+      loading="lazy"
+      decoding="async"
       className={cn(
-        'flex h-12 w-[7.5rem] items-center justify-center sm:h-14 sm:w-40',
+        'w-auto max-w-none shrink-0 object-contain object-center',
+        logoHeightClass[client.logoKey],
         'opacity-90 transition-opacity duration-200',
         'motion-safe:hover:opacity-100',
-        'focus-within:opacity-100',
       )}
-    >
-      <img
-        src={AppImages.landing.clients[client.logoKey]}
-        alt={client.alt}
-        width={160}
-        height={56}
-        loading="lazy"
-        decoding="async"
-        className={cn(
-          'max-h-9 w-auto max-w-full object-contain sm:max-h-10',
-          'drop-shadow-[0_1px_1px_rgba(15,23,42,0.12)]',
-        )}
-      />
-    </div>
+    />
   )
 }

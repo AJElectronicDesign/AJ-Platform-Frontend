@@ -18,7 +18,7 @@ export const brand = {
   },
   social: {
     linkedin: 'https://www.linkedin.com/company/aj-electronic-design',
-    github: 'https://github.com/aj-electronic-design',
+    github: 'https://github.com/AJElectronicDesign',
     youtube: 'https://www.youtube.com/@aj-electronic-design',
   },
 } as const

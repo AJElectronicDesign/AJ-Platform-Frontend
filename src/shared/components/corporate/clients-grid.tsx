@@ -7,9 +7,9 @@ export interface ClientsGridProps {
 
 export function ClientsGrid({ clients }: ClientsGridProps) {
   return (
-    <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-6 sm:gap-x-10 lg:flex-nowrap lg:justify-between lg:gap-x-4">
+    <ul className="flex flex-wrap items-center justify-center gap-x-16 gap-y-12 md:gap-x-24">
       {clients.map((client) => (
-        <li key={client.id}>
+        <li key={client.id} className="flex items-center justify-center">
           <ClientLogo client={client} />
         </li>
       ))}
