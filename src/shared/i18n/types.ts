@@ -158,6 +158,13 @@ export interface CompanyCatalog {
     eyebrow: string
     title: string
     description: string
+    people: Record<
+      string,
+      {
+        role: string
+        imageAlt: string
+      }
+    >
   }
   whatWeDo: {
     eyebrow: string

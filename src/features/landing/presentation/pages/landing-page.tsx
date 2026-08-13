@@ -1,6 +1,7 @@
 import { ClientsSection } from '@/features/landing/presentation/sections/clients-section'
 import { ContactSection } from '@/features/landing/presentation/sections/contact-section'
 import { HeroSection } from '@/features/landing/presentation/sections/hero-section'
+import { LandingLeadersSection } from '@/features/landing/presentation/sections/leaders-section'
 import { ServicesSection } from '@/features/landing/presentation/sections/services-section'
 import { TeamSection } from '@/features/landing/presentation/sections/team-section'
 import { TechnologiesSection } from '@/features/landing/presentation/sections/technologies-section'
@@ -22,6 +23,7 @@ export function LandingPage() {
         services={content.services}
       />
       <TeamSection content={content.teamSection} />
+      <LandingLeadersSection />
       <TechnologiesSection
         intro={content.technologiesSection}
         technologies={content.technologies}

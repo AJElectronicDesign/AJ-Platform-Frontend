@@ -1,6 +1,9 @@
-import type { LandingClientLogoKey } from '@/shared/theme/app-images'
+import type {
+  LandingClientLogoKey,
+  LeaderImageKey,
+} from '@/shared/theme/app-images'
 
-export type { LandingClientLogoKey }
+export type { LandingClientLogoKey, LeaderImageKey }
 
 export interface ServiceRecord {
   id: string
@@ -76,8 +79,7 @@ export interface PurposeValueRecord {
 export interface Leader {
   id: string
   name: string
-  role: string
-  image?: string
+  imageKey?: LeaderImageKey
   email?: string
   phone?: string
   linkedin?: string

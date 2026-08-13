@@ -5,6 +5,7 @@ export type {
   IndustryRecord,
   LandingClientLogoKey,
   Leader,
+  LeaderImageKey,
   ProcessStep,
   ProcessStepRecord,
   PurposeValueRecord,

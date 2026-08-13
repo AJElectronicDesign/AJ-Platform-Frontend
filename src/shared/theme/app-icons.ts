@@ -512,6 +512,59 @@ const ChevronDownIcon = createIcon(
   }),
 )
 
+const PersonIcon = createIcon([
+  createElement('circle', {
+    key: 'head',
+    cx: 12,
+    cy: 8,
+    r: 3.6,
+    fill: 'currentColor',
+  }),
+  createElement('path', {
+    key: 'shoulders',
+    d: 'M4 21c.5-4.2 3.6-6.6 8-6.6s7.5 2.4 8 6.6H4Z',
+    fill: 'currentColor',
+  }),
+])
+
+const MailIcon = createIcon(
+  createElement('path', {
+    d: 'M4.5 7.5h15v9h-15zM4.8 8.2 12 13.2 19.2 8.2',
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinejoin: 'round',
+  }),
+)
+
+const PhoneIcon = createIcon(
+  createElement('path', {
+    d: 'M8 4.8h2.4l1 2.4-1.5 1.5a11 11 0 0 0 5.4 5.4l1.5-1.5 2.4 1V18a1.6 1.6 0 0 1-1.6 1.6A13.6 13.6 0 0 1 4.8 6.4 1.6 1.6 0 0 1 6.4 4.8H8Z',
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinejoin: 'round',
+  }),
+)
+
+const LinkedInIcon = createIcon([
+  createElement('rect', {
+    key: 'frame',
+    x: 4,
+    y: 4,
+    width: 16,
+    height: 16,
+    rx: 2,
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+  }),
+  createElement('path', {
+    key: 'mark',
+    d: 'M8.2 10.2V16M8.2 7.6v.1M11.4 16v-3.4c0-1.2.8-2 1.9-2s1.9.8 1.9 2V16',
+    stroke: 'currentColor',
+    strokeWidth: 1.6,
+    strokeLinecap: 'round',
+  }),
+])
+
 /**
  * Centralized icon catalog — similar to Flutter `AppIcons`.
  */
@@ -542,6 +595,10 @@ export const AppIcons = {
   globe: GlobeIcon,
   user: UserIcon,
   chevronDown: ChevronDownIcon,
+  person: PersonIcon,
+  mail: MailIcon,
+  phone: PhoneIcon,
+  linkedin: LinkedInIcon,
 } as const
 
 export const AppIconNames = {
@@ -571,6 +628,10 @@ export const AppIconNames = {
   globe: 'globe',
   user: 'user',
   chevronDown: 'chevron-down',
+  person: 'person',
+  mail: 'mail',
+  phone: 'phone',
+  linkedin: 'linkedin',
 } as const
 
 export type AppIconKey = keyof typeof AppIcons

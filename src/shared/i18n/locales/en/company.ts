@@ -51,8 +51,18 @@ export const company: CompanyCatalog = {
   },
   leaders: {
     eyebrow: 'Our leaders',
-    title: 'Leadership',
+    title: 'Our Leaders',
     description: 'The people who lead AJ Electronic Design.',
+    people: {
+      'angeles-pena': {
+        role: 'Co-founder / Director',
+        imageAlt: 'Portrait of Angeles Peña Monroy, Co-founder and Director',
+      },
+      'juan-cazares': {
+        role: 'Co-founder / Lead Tech',
+        imageAlt: 'Portrait of Juan Cazares Blanco, Co-founder and Lead Tech',
+      },
+    },
   },
   whatWeDo: {
     eyebrow: 'What we do',

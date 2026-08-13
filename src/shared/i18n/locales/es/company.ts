@@ -51,8 +51,18 @@ export const company: CompanyCatalog = {
   },
   leaders: {
     eyebrow: 'Nuestros líderes',
-    title: 'Liderazgo',
+    title: 'Nuestros líderes',
     description: 'Las personas que dirigen AJ Electronic Design.',
+    people: {
+      'angeles-pena': {
+        role: 'Cofundadora / Directora',
+        imageAlt: 'Retrato de Angeles Peña Monroy, cofundadora y directora',
+      },
+      'juan-cazares': {
+        role: 'Cofundador / Lead Tech',
+        imageAlt: 'Retrato de Juan Cazares Blanco, cofundador y Lead Tech',
+      },
+    },
   },
   whatWeDo: {
     eyebrow: 'Qué hacemos',

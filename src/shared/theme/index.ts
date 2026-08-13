@@ -12,7 +12,7 @@ export { AppShadows, type AppShadowName } from './app-shadows'
 
 export { AppTextStyles, type AppTextStyleName } from './app-text-styles'
 
-export { AppImages, type AppImageGroup } from './app-images'
+export { AppImages, type AppImageGroup, type LeaderImageKey } from './app-images'
 
 export {
   AppIcons,
