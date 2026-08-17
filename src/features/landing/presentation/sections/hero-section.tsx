@@ -24,7 +24,7 @@ export function HeroSection({ content }: HeroSectionProps) {
       <img
         src={AppImages.landing.heroBackground}
         alt=""
-        className="absolute inset-0 h-full w-full scale-105 object-cover object-[72%_42%] sm:object-[78%_40%]"
+        className="absolute inset-0 h-full w-full object-cover object-center"
         loading="eager"
         decoding="async"
       />
