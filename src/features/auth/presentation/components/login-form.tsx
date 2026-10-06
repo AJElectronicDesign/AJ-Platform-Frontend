@@ -1,33 +1,49 @@
 import { useState, type FormEvent } from 'react'
-import { signIn } from '@/features/auth/application/use-cases/sign-in'
+import type { SignInErrorCode } from '@/features/auth/domain/errors/auth-error'
+import { useAuth } from '@/features/auth/presentation/use-auth'
 import { AppColorClasses, AppTextStyles } from '@/shared/theme'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { cn } from '@/shared/utils/cn'
 
 export function LoginForm() {
+  const { signIn } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [feedback, setFeedback] = useState<string | null>(null)
+  const [error, setError] = useState<{ code: SignInErrorCode; message: string } | null>(
+    null,
+  )
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsSubmitting(true)
-    setFeedback(null)
+    setError(null)
 
     try {
       const result = await signIn({ email, password })
-      setFeedback(result.message)
+
+      if (!result.success) {
+        setError({ code: result.code, message: result.message })
+
+        if (result.code === 'invalid_credentials') {
+          setPassword('')
+        }
+      }
     } catch {
-      setFeedback('Unable to start sign-in. Please try again.')
+      setError({
+        code: 'unknown',
+        message: 'Unable to start sign-in. Please try again.',
+      })
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  const invalidCredentials = error?.code === 'invalid_credentials'
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate aria-busy={isSubmitting}>
       <label className="block space-y-2">
         <span className={AppTextStyles.label}>Email</span>
         <Input
@@ -38,6 +54,8 @@ export function LoginForm() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
+          disabled={isSubmitting}
+          aria-invalid={invalidCredentials}
         />
       </label>
 
@@ -51,6 +69,8 @@ export function LoginForm() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
+          disabled={isSubmitting}
+          aria-invalid={invalidCredentials}
         />
       </label>
 
@@ -58,18 +78,17 @@ export function LoginForm() {
         {isSubmitting ? 'Signing in...' : 'Log in'}
       </Button>
 
-      {feedback ? (
+      {error ? (
         <p
           className={cn(
             AppTextStyles.caption,
             'rounded-xl border px-3 py-2',
-            AppColorClasses.border.brand100,
-            AppColorClasses.bg.brand50,
-            AppColorClasses.text.brand800,
+            'border-red-200 bg-red-50',
+            AppColorClasses.text.danger,
           )}
-          role="status"
+          role="alert"
         >
-          {feedback}
+          {error.message}
         </p>
       ) : null}
     </form>

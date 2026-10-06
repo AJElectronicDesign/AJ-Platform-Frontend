@@ -1,6 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import { LoginForm } from '@/features/auth/presentation/components/login-form'
+import { SessionLoading } from '@/features/auth/presentation/session-loading'
+import { useAuth } from '@/features/auth/presentation/use-auth'
 import { Container } from '@/shared/components/container'
+import { paths } from '@/shared/constants/paths'
 import {
   AppColorClasses,
   AppGradients,
@@ -9,7 +12,36 @@ import {
 } from '@/shared/theme'
 import { cn } from '@/shared/utils/cn'
 
+function returnPath(state: unknown): string {
+  if (!state || typeof state !== 'object' || !('from' in state)) {
+    return paths.app
+  }
+
+  const from = (state as { from?: { pathname?: unknown } }).from
+
+  if (!from || typeof from.pathname !== 'string') {
+    return paths.app
+  }
+
+  if (from.pathname !== paths.app && !from.pathname.startsWith(`${paths.app}/`)) {
+    return paths.app
+  }
+
+  return from.pathname
+}
+
 export function LoginPage() {
+  const { status } = useAuth()
+  const location = useLocation()
+
+  if (status === 'loading') {
+    return <SessionLoading fill={false} />
+  }
+
+  if (status === 'authenticated') {
+    return <Navigate to={returnPath(location.state)} replace />
+  }
+
   return (
     <section
       className={cn(

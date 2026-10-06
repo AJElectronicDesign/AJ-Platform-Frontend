@@ -184,9 +184,34 @@ export interface CompanyCatalog {
   }
 }
 
+export interface AppCatalog {
+  session: {
+    loading: string
+  }
+  shell: {
+    navigation: string
+    openNavigation: string
+    closeNavigation: string
+    logout: string
+    loggingOut: string
+    publicSite: string
+  }
+  modules: {
+    dashboard: string
+    clients: string
+    quotations: string
+    deliveryOrders: string
+  }
+  placeholder: {
+    title: string
+    description: string
+  }
+}
+
 export interface Catalogs {
   common: CommonCatalog
   navigation: NavigationCatalog
   home: HomeCatalog
   company: CompanyCatalog
+  app: AppCatalog
 }
