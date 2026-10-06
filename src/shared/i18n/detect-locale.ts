@@ -10,7 +10,7 @@ export function isLocale(value: string | null | undefined): value is Locale {
 
 export function detectLocale(): Locale {
   if (typeof window === 'undefined') {
-    return 'en'
+    return 'es'
   }
 
   const stored = window.localStorage.getItem(STORAGE_KEY)
@@ -24,12 +24,18 @@ export function detectLocale(): Locale {
     : [window.navigator.language]
 
   for (const language of languages) {
-    if (language.toLowerCase().startsWith('es')) {
+    const value = language.toLowerCase()
+
+    if (value.startsWith('es')) {
       return 'es'
+    }
+
+    if (value.startsWith('en')) {
+      return 'en'
     }
   }
 
-  return 'en'
+  return 'es'
 }
 
 export function persistLocale(locale: Locale) {

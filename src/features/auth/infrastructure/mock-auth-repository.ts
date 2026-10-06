@@ -5,9 +5,10 @@ import type {
   AuthRepository,
   AuthSession,
 } from '@/features/auth/domain/repositories/auth-repository'
+import { authSession } from '@/features/auth/infrastructure/auth-session'
 import { accessToken } from '@/shared/infrastructure/http/access-token'
 
-/** Dev-only account used when `VITE_AUTH_MOCK=true`. */
+/** Dev-only account used when `npm run dev` runs with `VITE_AUTH_MOCK=true`. */
 export const mockAuthUser: AuthUser = {
   id: 'user_demo',
   email: 'demo@aj-electronic-design.com',
@@ -15,7 +16,7 @@ export const mockAuthUser: AuthUser = {
   role: 'admin',
 }
 
-const MOCK_PASSWORD = 'password'
+const MOCK_PASSWORD = 'mock-password'
 const MOCK_TOKEN_PREFIX = 'mock.'
 
 function delay(ms: number): Promise<void> {
@@ -25,6 +26,26 @@ function delay(ms: number): Promise<void> {
 }
 
 export class MockAuthRepository implements AuthRepository {
+  hasSession(): boolean {
+    return authSession.hasSession()
+  }
+
+  sessionExpiresAt(): number | null {
+    return authSession.sessionExpiresAt()
+  }
+
+  clearLocalSession(): void {
+    authSession.clearLocalSession()
+  }
+
+  expireLocalSession(): void {
+    authSession.expireLocalSession()
+  }
+
+  subscribe(listener: () => void): () => void {
+    return authSession.subscribe(listener)
+  }
+
   async login(credentials: LoginCredentials): Promise<AuthSession> {
     await delay(250)
 

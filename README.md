@@ -46,13 +46,13 @@ Copia `.env.example` a `.env`. Vite incrusta las variables `VITE_*` en el build;
 | `VITE_AUTH_MOCK` | `true` solo en desarrollo para iniciar sesión sin backend. |
 | `VITE_EMAILJS_*` | Formulario público de contacto. |
 
-El sitio publicado en GitHub Pages también necesita `VITE_API_URL` en el momento del build. En el repositorio, crea la variable de Actions `VITE_API_URL` (Settings → Secrets and variables → Actions → Variables). El workflow de Pages la pasa al build. Si falta, el sitio público sigue construyendo, pero el login mostrará que la API no está configurada.
+El build de producción falla si `VITE_API_URL` no está definida: Vite la incrusta y, sin ella, el login no tiene un origen al que llamar. En el repositorio, crea la variable de Actions `VITE_API_URL` (Settings → Secrets and variables → Actions → Variables). El workflow de Pages la pasa al build y se detiene si está vacía. El workflow de pull request hacia `develop` usa un origen de ejemplo solo para poder construir y comprobar que el mock no entra en `dist/`.
 
 El backend vive en otro origen y no usa cookies. Su lista CORS debe incluir `http://localhost:5173` y `https://ajelectronicdesign.github.io` (el origen, sin el path `/AJ-Platform-Frontend/`).
 
 ## Autenticación
 
-El contrato es el de `AJ-Platform-Backend` (base `${VITE_API_URL}/api/v1`). No hay refresh token: solo un access token de 3600 segundos. Al expirar o revocarse, se borra y la app vuelve a `/login`.
+El contrato es el de `AJ-Platform-Backend` (base `${VITE_API_URL}/api/v1`). No hay refresh token: solo un access token de 3600 segundos. El token vive en `sessionStorage` (esta pestaña). Al expirar o revocarse dentro de `/app`, se borra y la app vuelve a `/login` conservando la ruta, la query y el hash para poder regresar. En páginas públicas la sesión se cierra sin redirigir. Cerrar sesión en una pestaña cierra las demás.
 
 | Método | Ruta | Éxito |
 | --- | --- | --- |
@@ -68,19 +68,19 @@ Los errores son siempre `{ "error": { "code", "message", "details": [] } }`. El 
 - `UNAUTHORIZED`, `TOKEN_INVALID`, `TOKEN_EXPIRED`, `TOKEN_REVOKED` (401) — la sesión terminó; se borra el token y se vuelve a `/login`. Reusar un token después del logout responde `TOKEN_REVOKED`
 - `FORBIDDEN` (403) — el token sigue siendo válido y el rol no alcanza. No cierra la sesión
 
-`role` es `admin` o `employee`. El token vive solo en `src/shared/infrastructure/http/access-token.ts` y el cliente HTTP lo manda como Bearer. No se envía `credentials: 'include'`.
+`role` es `admin` o `employee`. El token vive solo en `src/shared/infrastructure/http/access-token.ts` y el cliente HTTP lo manda como Bearer. No se envía `credentials: 'include'`. Si una petición autenticada no tiene un token vigente, no sale a la red: se cierra la sesión.
 
-Al cargar, si hay token, `GET /auth/me` restaura el usuario, así que un refresh de la página mantiene la sesión mientras no haya vencido. El login y esa comprobación inicial no redirigen desde la landing: si el token ya no sirve, la sesión termina y `/app` manda a `/login`.
+Al cargar, si hay token, `GET /auth/me` restaura el usuario, así que recargar la pestaña mantiene la sesión mientras no haya vencido. Un `401` borra el token. Un fallo de red o un `5xx` no cierra la sesión: la pantalla muestra el error y un reintento. El login y esa comprobación inicial no redirigen desde la landing. Si el token ya no sirve, `/app` manda a `/login`.
 
-La página `/login` conserva su diseño. Estados: envío en curso, credenciales inválidas, rate limit y error de red. Quien ya tiene sesión y abre `/login` entra a `/app`.
+La página `/login` conserva su diseño. Los textos salen de i18n (español por defecto; inglés si el navegador es inglés o si se eligió ese idioma). Estados: envío en curso, validación de campos vacíos, credenciales inválidas, rate limit, error de red y servicio no disponible. Quien ya tiene sesión y abre `/login` entra a `/app`.
 
 My AJ, en el header y el footer, apunta a `/app`. Sin sesión, el guard redirige a `/login`.
 
 ### Mock de desarrollo
 
-Con `VITE_AUTH_MOCK=true` no hace falta el backend:
+Con `npm run dev` y `VITE_AUTH_MOCK=true` no hace falta el backend. El mock se carga con `import()` solo en desarrollo; un build de producción no lo incluye, y CI rechaza `dist/` si aparecen las cuentas o la contraseña de prueba.
 
-- `demo@aj-electronic-design.com` / `password` (rol `admin`)
+- `demo@aj-electronic-design.com` / `mock-password` (rol `admin`)
 - `limited@aj-electronic-design.com` simula HTTP 429
 - `offline@aj-electronic-design.com` simula un fallo de red
 - cualquier otra combinación simula credenciales inválidas

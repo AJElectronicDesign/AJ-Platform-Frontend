@@ -23,6 +23,10 @@ export function toAuthError(error: unknown): AuthError {
       return new AuthError('network', error.message)
     }
 
+    if (error.status >= 500) {
+      return new AuthError('unavailable', error.message)
+    }
+
     return new AuthError('unknown', error.message)
   }
 

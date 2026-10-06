@@ -26,4 +26,10 @@ describe('toAuthError', () => {
       ).code,
     ).toBe('unknown')
   })
+
+  it('maps server failures to an unavailable session', () => {
+    expect(toAuthError(new ApiError(500, 'Internal error', 'INTERNAL_ERROR')).code).toBe(
+      'unavailable',
+    )
+  })
 })

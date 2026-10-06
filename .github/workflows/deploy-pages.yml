@@ -40,7 +40,9 @@ jobs:
         run: npm run build
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
-          VITE_AUTH_MOCK: ${{ vars.VITE_AUTH_MOCK }}
+
+      - name: Reject auth mock in the production bundle
+        run: node scripts/assert-no-auth-mock.mjs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -184,6 +184,33 @@ export interface CompanyCatalog {
   }
 }
 
+export interface AuthCatalog {
+  login: {
+    eyebrow: string
+    title: string
+    description: string
+    email: string
+    emailPlaceholder: string
+    password: string
+    passwordPlaceholder: string
+    submit: string
+    submitting: string
+    publicSitePrompt: string
+    backHome: string
+    validation: string
+    invalid_credentials: string
+    rate_limited: string
+    network: string
+    unavailable: string
+    unknown: string
+  }
+  session: {
+    network: string
+    unavailable: string
+    retry: string
+  }
+}
+
 export interface AppCatalog {
   session: {
     loading: string
@@ -214,4 +241,5 @@ export interface Catalogs {
   home: HomeCatalog
   company: CompanyCatalog
   app: AppCatalog
+  auth: AuthCatalog
 }

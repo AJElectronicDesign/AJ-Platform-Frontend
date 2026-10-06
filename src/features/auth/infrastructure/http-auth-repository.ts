@@ -8,6 +8,7 @@ import type {
 import { accessToken } from '@/shared/infrastructure/http/access-token'
 import { ApiError } from '@/shared/infrastructure/http/api-error'
 import { httpRequest } from '@/shared/infrastructure/http/http-client'
+import { authSession } from '@/features/auth/infrastructure/auth-session'
 import { toAuthError } from '@/features/auth/infrastructure/map-auth-error'
 import { parseAuthUser } from '@/features/auth/infrastructure/parse-auth-user'
 
@@ -22,6 +23,26 @@ interface CurrentUserResponse {
 }
 
 export class HttpAuthRepository implements AuthRepository {
+  hasSession(): boolean {
+    return authSession.hasSession()
+  }
+
+  sessionExpiresAt(): number | null {
+    return authSession.sessionExpiresAt()
+  }
+
+  clearLocalSession(): void {
+    authSession.clearLocalSession()
+  }
+
+  expireLocalSession(): void {
+    authSession.expireLocalSession()
+  }
+
+  subscribe(listener: () => void): () => void {
+    return authSession.subscribe(listener)
+  }
+
   async login(credentials: LoginCredentials): Promise<AuthSession> {
     try {
       const data = await httpRequest<LoginResponse>('/auth/login', {
@@ -76,8 +97,10 @@ export class HttpAuthRepository implements AuthRepository {
 
       return parseAuthUser(data?.user)
     } catch (error) {
-      // 401: UNAUTHORIZED, TOKEN_INVALID, TOKEN_EXPIRED, TOKEN_REVOKED.
-      // 403 FORBIDDEN is not a logged-out session; keep the token.
+      // 401 (UNAUTHORIZED, TOKEN_INVALID, TOKEN_EXPIRED, TOKEN_REVOKED) clears
+      // the token and returns null so the session ends. 403 FORBIDDEN keeps
+      // the token. Network failures and 5xx throw so the UI can offer a retry
+      // instead of treating the user as logged out.
       if (error instanceof ApiError && error.status === 401) {
         accessToken.clear()
         return null

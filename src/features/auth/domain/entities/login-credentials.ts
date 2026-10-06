@@ -10,10 +10,8 @@ export type SignInResult =
   | {
       success: true
       user: AuthUser
-      message: string
     }
   | {
       success: false
       code: SignInErrorCode
-      message: string
     }

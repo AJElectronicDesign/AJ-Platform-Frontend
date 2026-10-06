@@ -25,6 +25,11 @@ function repository(
     login,
     currentUser: async () => null,
     logout: async () => undefined,
+    hasSession: () => false,
+    sessionExpiresAt: () => null,
+    clearLocalSession: () => undefined,
+    expireLocalSession: () => undefined,
+    subscribe: () => () => undefined,
   }
 }
 
@@ -42,7 +47,6 @@ describe('signIn', () => {
     expect(result).toEqual({
       success: true,
       user: session.user,
-      message: 'Signed in.',
     })
   })
 
@@ -68,10 +72,9 @@ describe('signIn', () => {
       }),
     )
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       success: false,
       code: 'invalid_credentials',
-      message: 'Invalid email or password.',
     })
   })
 
@@ -83,10 +86,9 @@ describe('signIn', () => {
       }),
     )
 
-    expect(result).toMatchObject({
+    expect(result).toEqual({
       success: false,
       code: 'rate_limited',
-      message: 'Too many sign-in attempts. Please wait and try again.',
     })
   })
 
@@ -106,15 +108,13 @@ describe('signIn', () => {
       }),
     )
 
-    expect(network).toMatchObject({
+    expect(network).toEqual({
       success: false,
       code: 'network',
-      message: 'Network error. Check your connection and try again.',
     })
-    expect(unknown).toMatchObject({
+    expect(unknown).toEqual({
       success: false,
       code: 'unknown',
-      message: 'Unable to sign in right now. Please try again.',
     })
   })
 })

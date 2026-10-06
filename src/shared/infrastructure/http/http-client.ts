@@ -13,7 +13,11 @@ export interface HttpRequestOptions {
   body?: unknown
   headers?: HeadersInit
   signal?: AbortSignal
-  /** Attach the stored Bearer token when one exists. Defaults to true. */
+  /**
+   * Attach the stored Bearer token. Defaults to true.
+   * When auth is required and the token is missing or expired, the request is
+   * not sent.
+   */
   auth?: boolean
   /**
    * On a session-ending 401, clear the token and redirect to /login.
@@ -33,7 +37,18 @@ export async function httpRequest<T>(
     headers.set('Accept', 'application/json')
   }
 
-  const token = options.auth === false ? null : accessToken.read()
+  const requiresAuth = options.auth !== false
+  const token = requiresAuth ? accessToken.read() : null
+
+  // An expired token is already gone. Do not send the request: a later 401
+  // would be ignored because no Bearer token was attached.
+  if (requiresAuth && !token) {
+    if (options.handleUnauthorized !== false) {
+      notifyUnauthorized()
+    }
+
+    throw new ApiError(401, 'Authentication required', ApiErrorCode.unauthorized)
+  }
 
   if (token) {
     headers.set('Authorization', `Bearer ${token}`)

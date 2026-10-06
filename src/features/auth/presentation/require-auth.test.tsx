@@ -10,8 +10,10 @@ function authValue(overrides: Partial<AuthContextValue> = {}): AuthContextValue 
     user: null,
     role: null,
     status: 'unauthenticated',
-    signIn: async () => ({ success: false, code: 'unknown', message: 'Unable to sign in.' }),
+    sessionError: null,
+    signIn: async () => ({ success: false, code: 'unknown' }),
     signOut: async () => undefined,
+    retry: () => undefined,
     ...overrides,
   }
 }
@@ -64,6 +66,13 @@ describe('RequireAuth', () => {
     renderGuard(authValue())
 
     expect(screen.getByText('Login screen /app')).toBeTruthy()
+  })
+
+  it('shows a retry state instead of sending a failed restore to login', () => {
+    renderGuard(authValue({ status: 'error', sessionError: 'unavailable' }))
+
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeTruthy()
+    expect(screen.queryByText(/Login screen/)).toBeNull()
   })
 
   it('waits while the session is restoring', () => {

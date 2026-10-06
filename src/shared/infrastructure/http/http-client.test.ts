@@ -82,8 +82,38 @@ describe('httpRequest', () => {
     })
   })
 
-  it('clears the session on TOKEN_EXPIRED and TOKEN_REVOKED', async () => {
-    for (const code of ['TOKEN_EXPIRED', 'TOKEN_REVOKED'] as const) {
+  it('ends the session instead of sending a request without a valid token', async () => {
+    const fetchMock = vi.fn<typeof fetch>()
+    vi.stubGlobal('fetch', fetchMock)
+    const onUnauthorized = vi.fn()
+    const stop = setUnauthorizedHandler(onUnauthorized)
+
+    await expect(httpRequest('/clients')).rejects.toMatchObject({
+      status: 401,
+      code: 'UNAUTHORIZED',
+    })
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(onUnauthorized).toHaveBeenCalledOnce()
+    stop()
+  })
+
+  it('does not notify when unauthorized handling is disabled and there is no token', async () => {
+    const fetchMock = vi.fn<typeof fetch>()
+    vi.stubGlobal('fetch', fetchMock)
+    const onUnauthorized = vi.fn()
+    const stop = setUnauthorizedHandler(onUnauthorized)
+
+    await expect(httpRequest('/auth/me', { handleUnauthorized: false })).rejects.toMatchObject({
+      status: 401,
+      code: 'UNAUTHORIZED',
+    })
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(onUnauthorized).not.toHaveBeenCalled()
+    stop()
+  })
+
+  it('clears the session on UNAUTHORIZED, TOKEN_INVALID, TOKEN_EXPIRED, and TOKEN_REVOKED', async () => {
+    for (const code of ['UNAUTHORIZED', 'TOKEN_INVALID', 'TOKEN_EXPIRED', 'TOKEN_REVOKED'] as const) {
       accessToken.save('expired', 3600)
       resetUnauthorizedHandling()
       const onUnauthorized = vi.fn()
@@ -142,6 +172,31 @@ describe('httpRequest', () => {
     expect(accessToken.read()).toBe('abc')
   })
 
+  it('stores the access token in sessionStorage', () => {
+    accessToken.save('abc', 60)
+
+    expect(window.sessionStorage.getItem('aj.platform.accessToken')).toContain('abc')
+    expect(window.localStorage.getItem('aj.platform.accessToken')).toBeNull()
+    expect(accessToken.read()).toBe('abc')
+  })
+
+  it('logs out this tab when another tab clears the session', () => {
+    accessToken.save('abc', 60)
+    const onLogout = vi.fn()
+    const stop = accessToken.subscribe(onLogout)
+
+    window.dispatchEvent(
+      new StorageEvent('storage', {
+        key: 'aj.platform.auth.logout',
+        newValue: '1',
+      }),
+    )
+
+    expect(accessToken.read()).toBeNull()
+    expect(onLogout).toHaveBeenCalled()
+    stop()
+  })
+
   it('drops a locally expired access token', () => {
     accessToken.save('stale', -1)
 
@@ -187,7 +242,13 @@ describe('httpRequest', () => {
       throw new TypeError('Failed to fetch')
     })
 
-    await expect(httpRequest('/auth/me', { handleUnauthorized: false })).rejects.toMatchObject({
+    await expect(
+      httpRequest('/auth/login', {
+        method: 'POST',
+        auth: false,
+        handleUnauthorized: false,
+      }),
+    ).rejects.toMatchObject({
       status: 0,
       code: 'network',
     })
