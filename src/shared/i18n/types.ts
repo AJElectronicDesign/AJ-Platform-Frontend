@@ -445,6 +445,246 @@ export interface ClientsCatalog {
   }
 }
 
+export interface QuotesCatalog {
+  closeDialog: string
+  list: {
+    eyebrow: string
+    title: string
+    description: string
+    newQuote: string
+    searchLabel: string
+    searchPlaceholder: string
+    statusFilter: string
+    typeFilter: string
+    clientFilter: string
+    clientPlaceholder: string
+    clearClient: string
+    allStatuses: string
+    allTypes: string
+    folio: string
+    client: string
+    project: string
+    type: string
+    status: string
+    total: string
+    validUntil: string
+    updated: string
+    empty: string
+    emptyFiltered: string
+    loading: string
+    retry: string
+    previous: string
+    next: string
+    page: string
+    results: string
+    errorTitle: string
+  }
+  status: {
+    draft: string
+    sent: string
+    accepted: string
+    rejected: string
+    expired: string
+  }
+  type: {
+    assemblies: string
+    projects: string
+    services_material: string
+  }
+  form: {
+    createTitle: string
+    editTitle: string
+    createDescription: string
+    editDescription: string
+    back: string
+    clientHint: string
+    clientInactive: string
+    clientFirst: string
+    changeClient: string
+    searching: string
+    noClients: string
+    contactsLoading: string
+    contactsUnavailable: string
+    type: string
+    projectName: string
+    requestedBy: string
+    requestedByManual: string
+    requestedByHint: string
+    name: string
+    email: string
+    attentionTo: string
+    attentionHint: string
+    currency: string
+    exchangeRate: string
+    exchangeHint: string
+    deliveryTime: string
+    validUntil: string
+    notes: string
+    includeVat: string
+    vatRate: string
+    vatHint: string
+    items: string
+    description: string
+    quantity: string
+    unitPrice: string
+    lineTotal: string
+    addItem: string
+    removeItem: string
+    moveUp: string
+    moveDown: string
+    preview: string
+    previewHint: string
+    subtotal: string
+    vat: string
+    total: string
+    noVat: string
+    save: string
+    saving: string
+    cancel: string
+    loading: string
+    notDraftTitle: string
+    notDraftBody: string
+    openDetail: string
+  }
+  validation: {
+    client: string
+    type: string
+    projectName: string
+    attentionTo: string
+    requestedByName: string
+    requestedByEmail: string
+    currency: string
+    exchangeRate: string
+    deliveryTime: string
+    validUntil: string
+    notes: string
+    vatRate: string
+    itemDescription: string
+    itemQuantity: string
+    itemUnitPrice: string
+    tooManyItems: string
+    overflow: string
+  }
+  /**
+   * Translations for `VALIDATION_ERROR` `details[].code`.
+   * An unknown code falls back to the server `message`.
+   */
+  detailCodes: {
+    REQUIRED: string
+    TOO_LONG: string
+    INVALID_TYPE: string
+    EMAIL_INVALID: string
+    INVALID_ENUM: string
+    INVALID_UUID: string
+    VERSION_INVALID: string
+    UNRECOGNIZED_KEY: string
+    AT_LEAST_ONE_FIELD: string
+    OUT_OF_RANGE: string
+    INVALID_DECIMAL: string
+    TOO_MANY_DECIMALS: string
+    TOO_MANY_DIGITS: string
+    QUANTITY_NOT_POSITIVE: string
+    EXCHANGE_RATE_NOT_POSITIVE: string
+    VAT_RATE_OUT_OF_RANGE: string
+    DATE_INVALID: string
+    TOO_MANY_ITEMS: string
+    CONTACT_NOT_ON_CLIENT: string
+    CONTACT_SNAPSHOT_LOCKED: string
+    LINE_TOTAL_OVERFLOW: string
+    TOTAL_OVERFLOW: string
+  }
+  errors: {
+    versionConflict: string
+    reload: string
+    network: string
+    forbidden: string
+    notFound: string
+    clientNotFound: string
+    unknown: string
+    validation: string
+    clientInactive: string
+    notEditable: string
+    notDeletable: string
+    empty: string
+    expired: string
+    invalidTransition: string
+    folioExists: string
+  }
+  detail: {
+    backToList: string
+    loading: string
+    edit: string
+    send: string
+    accept: string
+    reject: string
+    revert: string
+    copy: string
+    delete: string
+    confirm: string
+    cancel: string
+    working: string
+    deleteTitle: string
+    deleteBody: string
+    acceptTitle: string
+    acceptBody: string
+    rejectTitle: string
+    rejectBody: string
+    expiredAccept: string
+    emptySend: string
+    readOnly: string
+    client: string
+    project: string
+    type: string
+    attentionTo: string
+    requestedBy: string
+    currency: string
+    exchangeRate: string
+    deliveryTime: string
+    validUntil: string
+    notes: string
+    items: string
+    itemsEmpty: string
+    description: string
+    quantity: string
+    unitPrice: string
+    lineTotal: string
+    subtotal: string
+    vat: string
+    total: string
+    noVat: string
+    timeline: string
+    timelineEmpty: string
+    sentAt: string
+    acceptedAt: string
+    rejectedAt: string
+    createdAt: string
+    updatedAt: string
+    none: string
+  }
+  clientSection: {
+    title: string
+    description: string
+    newQuote: string
+    viewAll: string
+    empty: string
+    loading: string
+    error: string
+    folio: string
+    project: string
+    status: string
+    total: string
+    updated: string
+  }
+  notice: {
+    saved: string
+    copied: string
+    accepted: string
+    sent: string
+    rejected: string
+    reverted: string
+  }
+}
+
 export interface Catalogs {
   common: CommonCatalog
   navigation: NavigationCatalog
@@ -453,4 +693,5 @@ export interface Catalogs {
   app: AppCatalog
   auth: AuthCatalog
   clients: ClientsCatalog
+  quotes: QuotesCatalog
 }

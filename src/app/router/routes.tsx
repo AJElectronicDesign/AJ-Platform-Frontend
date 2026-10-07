@@ -10,6 +10,9 @@ import { LandingPage } from '@/features/landing/presentation/pages/landing-page'
 import { ClientDetailPage } from '@/features/clients/presentation/pages/client-detail-page'
 import { ClientFormPage } from '@/features/clients/presentation/pages/client-form-page'
 import { ClientListPage } from '@/features/clients/presentation/pages/client-list-page'
+import { QuoteDetailPage } from '@/features/quotes/presentation/pages/quote-detail-page'
+import { QuoteFormPage } from '@/features/quotes/presentation/pages/quote-form-page'
+import { QuoteListPage } from '@/features/quotes/presentation/pages/quote-list-page'
 import { InternalLayout } from '@/features/workspace/presentation/internal-layout'
 import { ModulePlaceholderPage } from '@/features/workspace/presentation/pages/module-placeholder-page'
 
@@ -75,7 +78,19 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'cotizaciones',
-            element: <ModulePlaceholderPage moduleId="quotations" />,
+            element: <QuoteListPage />,
+          },
+          {
+            path: 'cotizaciones/nueva',
+            element: <QuoteFormPage mode="create" />,
+          },
+          {
+            path: 'cotizaciones/:quoteId',
+            element: <QuoteDetailPage />,
+          },
+          {
+            path: 'cotizaciones/:quoteId/editar',
+            element: <QuoteFormPage mode="edit" />,
           },
           {
             path: 'ordenes-de-entrega',
