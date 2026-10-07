@@ -19,6 +19,7 @@ export interface DialogProps {
   /** When false, focus is not restored on close (e.g. navigating elsewhere). */
   restoreFocus?: boolean
   className?: string
+  closeLabel?: string
 }
 
 const FOCUSABLE_SELECTOR = [
@@ -38,6 +39,7 @@ export function Dialog({
   returnFocusRef,
   restoreFocus = true,
   className,
+  closeLabel = 'Close dialog',
 }: DialogProps) {
   const titleId = useId()
   const panelRef = useRef<HTMLDivElement>(null)
@@ -162,7 +164,7 @@ export function Dialog({
           <button
             type="button"
             data-dialog-close="true"
-            aria-label="Close dialog"
+            aria-label={closeLabel}
             onClick={onClose}
             className={cn(
               'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-ink-muted transition-colors',

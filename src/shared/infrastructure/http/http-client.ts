@@ -24,6 +24,11 @@ export interface HttpRequestOptions {
    * Login and the initial `/auth/me` check pass false.
    */
   handleUnauthorized?: boolean
+  /**
+   * `blob` returns the raw success body (authenticated logo download).
+   * Errors still use the JSON envelope. Defaults to JSON.
+   */
+  responseType?: 'json' | 'blob'
 }
 
 export async function httpRequest<T>(
@@ -32,9 +37,13 @@ export async function httpRequest<T>(
 ): Promise<T> {
   const method = options.method ?? 'GET'
   const headers = new Headers(options.headers)
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData
 
   if (!headers.has('Accept')) {
-    headers.set('Accept', 'application/json')
+    headers.set(
+      'Accept',
+      options.responseType === 'blob' ? 'image/png, image/jpeg, image/webp' : 'application/json',
+    )
   }
 
   const requiresAuth = options.auth !== false
@@ -54,7 +63,9 @@ export async function httpRequest<T>(
     headers.set('Authorization', `Bearer ${token}`)
   }
 
-  if (options.body !== undefined && !headers.has('Content-Type')) {
+  // The browser sets the multipart boundary. Forcing application/json would
+  // break logo upload, and JSON.stringify would turn the file into {}.
+  if (options.body !== undefined && !isFormData && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json')
   }
 
@@ -64,7 +75,12 @@ export async function httpRequest<T>(
     response = await fetch(buildApiUrl(path), {
       method,
       headers,
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      body:
+        options.body === undefined
+          ? undefined
+          : isFormData
+            ? (options.body as FormData)
+            : JSON.stringify(options.body),
       signal: options.signal,
     })
   } catch (error) {
@@ -77,6 +93,10 @@ export async function httpRequest<T>(
   }
 
   if (response.ok) {
+    if (options.responseType === 'blob') {
+      return (await response.blob()) as T
+    }
+
     return (await readSuccessBody(response)) as T
   }
 
@@ -185,6 +205,12 @@ function readDetails(value: unknown): ApiErrorDetail[] {
       return []
     }
 
-    return [{ path: record.path, message: record.message }]
+    const detail: ApiErrorDetail = { path: record.path, message: record.message }
+
+    if (typeof record.code === 'string' && record.code.trim()) {
+      detail.code = record.code
+    }
+
+    return [detail]
   })
 }

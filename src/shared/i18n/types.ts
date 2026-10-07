@@ -235,6 +235,216 @@ export interface AppCatalog {
   }
 }
 
+export interface ClientsCatalog {
+  closeDialog: string
+  list: {
+    eyebrow: string
+    title: string
+    description: string
+    newClient: string
+    searchLabel: string
+    searchPlaceholder: string
+    activeFilter: string
+    activeTrue: string
+    activeFalse: string
+    activeAll: string
+    legalName: string
+    tradeName: string
+    rfc: string
+    primaryContact: string
+    currency: string
+    status: string
+    active: string
+    inactive: string
+    empty: string
+    emptyFiltered: string
+    loading: string
+    retry: string
+    previous: string
+    next: string
+    page: string
+    results: string
+    errorTitle: string
+  }
+  form: {
+    createTitle: string
+    editTitle: string
+    createDescription: string
+    editDescription: string
+    back: string
+    fiscal: string
+    commercial: string
+    address: string
+    rfc: string
+    rfcHint: string
+    legalName: string
+    taxRegime: string
+    taxRegimePlaceholder: string
+    fiscalPostalCode: string
+    cfdiUse: string
+    cfdiUsePlaceholder: string
+    tradeName: string
+    email: string
+    phoneCountryCode: string
+    phone: string
+    phoneHint: string
+    currency: string
+    paymentTermsDays: string
+    quotePrefix: string
+    quotePrefixHint: string
+    notes: string
+    street: string
+    exteriorNumber: string
+    interiorNumber: string
+    colonia: string
+    city: string
+    state: string
+    country: string
+    postalCode: string
+    save: string
+    saving: string
+    cancel: string
+    catalogError: string
+    noChanges: string
+    loading: string
+  }
+  validation: {
+    rfc: string
+    rfcDate: string
+    legalName: string
+    taxRegime: string
+    taxRegimePerson: string
+    fiscalPostalCode: string
+    cfdiUse: string
+    cfdiUsePerson: string
+    tradeName: string
+    email: string
+    phonePair: string
+    phoneCode: string
+    phone: string
+    currency: string
+    paymentTerms: string
+    quotePrefix: string
+    notes: string
+    country: string
+    street: string
+    exteriorNumber: string
+    interiorNumber: string
+    colonia: string
+    city: string
+    state: string
+    postalCode: string
+    contactName: string
+    contactPosition: string
+    contactEmail: string
+    contactPhone: string
+  }
+  /**
+   * Translations for `VALIDATION_ERROR` `details[].code`.
+   * An unknown code falls back to the server `message`.
+   */
+  detailCodes: {
+    REQUIRED: string
+    TOO_LONG: string
+    INVALID_TYPE: string
+    EMAIL_INVALID: string
+    PHONE_COUNTRY_CODE_INVALID: string
+    PHONE_INVALID: string
+    CONTACT_PHONE_INVALID: string
+    QUOTE_PREFIX_INVALID: string
+    COUNTRY_INVALID: string
+    POSTAL_CODE_INVALID: string
+    INVALID_ENUM: string
+    OUT_OF_RANGE: string
+    VERSION_INVALID: string
+    UNRECOGNIZED_KEY: string
+    PHONE_PAIR_REQUIRED: string
+    INVALID_UUID: string
+    AT_LEAST_ONE_FIELD: string
+    RFC_INVALID_FORMAT: string
+    RFC_INVALID_DATE: string
+    TAX_REGIME_INVALID: string
+    CFDI_USE_INVALID: string
+    TAX_REGIME_NOT_APPLICABLE: string
+    CFDI_USE_NOT_APPLICABLE: string
+  }
+  errors: {
+    rfcExists: string
+    quotePrefixExists: string
+    versionConflict: string
+    reload: string
+    network: string
+    forbidden: string
+    notFound: string
+    unknown: string
+    alreadyInactive: string
+    alreadyActive: string
+    logoTooLarge: string
+    logoUnsupported: string
+    logoNotFound: string
+    primaryConflict: string
+    contactNotFound: string
+    validation: string
+    logoEmpty: string
+  }
+  detail: {
+    edit: string
+    deactivate: string
+    reactivate: string
+    deactivateTitle: string
+    deactivateBody: string
+    reactivateTitle: string
+    reactivateBody: string
+    confirm: string
+    cancel: string
+    working: string
+    fiscal: string
+    commercial: string
+    address: string
+    contacts: string
+    contactsEmpty: string
+    addContact: string
+    editContact: string
+    deleteContact: string
+    deleteContactTitle: string
+    deleteContactBody: string
+    markPrimary: string
+    primary: string
+    name: string
+    position: string
+    email: string
+    phone: string
+    logo: string
+    logoEmpty: string
+    logoHint: string
+    uploadLogo: string
+    replaceLogo: string
+    deleteLogo: string
+    deleteLogoTitle: string
+    deleteLogoBody: string
+    uploading: string
+    paymentTerms: string
+    days: string
+    notes: string
+    loading: string
+    backToList: string
+    none: string
+  }
+  contactForm: {
+    createTitle: string
+    editTitle: string
+    name: string
+    position: string
+    email: string
+    phone: string
+    phoneHint: string
+    isPrimary: string
+    save: string
+    saving: string
+    cancel: string
+  }
+}
+
 export interface Catalogs {
   common: CommonCatalog
   navigation: NavigationCatalog
@@ -242,4 +452,5 @@ export interface Catalogs {
   company: CompanyCatalog
   app: AppCatalog
   auth: AuthCatalog
+  clients: ClientsCatalog
 }

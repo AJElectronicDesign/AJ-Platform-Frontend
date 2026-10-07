@@ -5,7 +5,9 @@ const needles = [
   'demo@aj-electronic-design.com',
   'limited@aj-electronic-design.com',
   'offline@aj-electronic-design.com',
+  'empleado@aj-electronic-design.com',
   'mock-password',
+  'aj.platform.clients.mock',
 ]
 
 const dist = path.resolve('dist')

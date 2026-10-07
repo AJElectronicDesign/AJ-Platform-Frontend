@@ -7,6 +7,9 @@ import { WhoWeArePage } from '@/features/company/presentation/pages/who-we-are-p
 import { WhatWeDoPage } from '@/features/company/presentation/pages/what-we-do-page'
 import { OurWorkPage } from '@/features/company/presentation/pages/our-work-page'
 import { LandingPage } from '@/features/landing/presentation/pages/landing-page'
+import { ClientDetailPage } from '@/features/clients/presentation/pages/client-detail-page'
+import { ClientFormPage } from '@/features/clients/presentation/pages/client-form-page'
+import { ClientListPage } from '@/features/clients/presentation/pages/client-list-page'
 import { InternalLayout } from '@/features/workspace/presentation/internal-layout'
 import { ModulePlaceholderPage } from '@/features/workspace/presentation/pages/module-placeholder-page'
 
@@ -56,7 +59,19 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'clientes',
-            element: <ModulePlaceholderPage moduleId="clients" />,
+            element: <ClientListPage />,
+          },
+          {
+            path: 'clientes/nuevo',
+            element: <ClientFormPage mode="create" />,
+          },
+          {
+            path: 'clientes/:clientId',
+            element: <ClientDetailPage />,
+          },
+          {
+            path: 'clientes/:clientId/editar',
+            element: <ClientFormPage mode="edit" />,
           },
           {
             path: 'cotizaciones',
