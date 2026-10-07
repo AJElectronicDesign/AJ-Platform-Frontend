@@ -184,9 +184,62 @@ export interface CompanyCatalog {
   }
 }
 
+export interface AuthCatalog {
+  login: {
+    eyebrow: string
+    title: string
+    description: string
+    email: string
+    emailPlaceholder: string
+    password: string
+    passwordPlaceholder: string
+    submit: string
+    submitting: string
+    publicSitePrompt: string
+    backHome: string
+    validation: string
+    invalid_credentials: string
+    rate_limited: string
+    network: string
+    unavailable: string
+    unknown: string
+  }
+  session: {
+    network: string
+    unavailable: string
+    retry: string
+  }
+}
+
+export interface AppCatalog {
+  session: {
+    loading: string
+  }
+  shell: {
+    navigation: string
+    openNavigation: string
+    closeNavigation: string
+    logout: string
+    loggingOut: string
+    publicSite: string
+  }
+  modules: {
+    dashboard: string
+    clients: string
+    quotations: string
+    deliveryOrders: string
+  }
+  placeholder: {
+    title: string
+    description: string
+  }
+}
+
 export interface Catalogs {
   common: CommonCatalog
   navigation: NavigationCatalog
   home: HomeCatalog
   company: CompanyCatalog
+  app: AppCatalog
+  auth: AuthCatalog
 }

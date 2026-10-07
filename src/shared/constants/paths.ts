@@ -5,7 +5,11 @@ export const paths = {
   ourWork: '/our-work',
   login: '/login',
   contact: '/#contact',
-  myAj: '/login',
+  app: '/app',
+  appClients: '/app/clientes',
+  appQuotations: '/app/cotizaciones',
+  appDeliveryOrders: '/app/ordenes-de-entrega',
+  myAj: '/app',
 } as const
 
 export const myAjHref = paths.myAj

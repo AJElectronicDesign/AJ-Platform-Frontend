@@ -33,8 +33,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+
+      - name: Reject auth mock in the production bundle
+        run: node scripts/assert-no-auth-mock.mjs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

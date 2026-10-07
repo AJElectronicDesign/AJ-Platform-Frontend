@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from '@/features/auth/presentation/auth-provider'
 import { I18nProvider } from '@/shared/i18n'
 
 export interface AppProvidersProps {
@@ -11,7 +12,9 @@ const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <BrowserRouter basename={routerBasename}>
-      <I18nProvider>{children}</I18nProvider>
+      <I18nProvider>
+        <AuthProvider>{children}</AuthProvider>
+      </I18nProvider>
     </BrowserRouter>
   )
 }
