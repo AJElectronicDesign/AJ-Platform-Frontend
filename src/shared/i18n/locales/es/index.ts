@@ -1,5 +1,6 @@
 import { app } from './app'
 import { auth } from './auth'
+import { clients } from './clients'
 import { common } from './common'
 import { company } from './company'
 import { home } from './home'
@@ -13,4 +14,5 @@ export const es: Catalogs = {
   company,
   app,
   auth,
+  clients,
 }

@@ -81,18 +81,26 @@ My AJ, en el header y el footer, apunta a `/app`. Sin sesión, el guard redirige
 Con `npm run dev` y `VITE_AUTH_MOCK=true` no hace falta el backend. El mock se carga con `import()` solo en desarrollo; un build de producción no lo incluye, y CI rechaza `dist/` si aparecen las cuentas o la contraseña de prueba.
 
 - `demo@aj-electronic-design.com` / `mock-password` (rol `admin`)
+- `empleado@aj-electronic-design.com` / `mock-password` (rol `employee`; ve y edita clientes, no desactiva)
 - `limited@aj-electronic-design.com` simula HTTP 429
 - `offline@aj-electronic-design.com` simula un fallo de red
 - cualquier otra combinación simula credenciales inválidas
 
+Con el mismo flag, Clientes usa un repositorio en memoria (listado, alta, detalle, logo y contactos) para poder recorrer el módulo sin el backend. Tampoco entra en el build de producción.
+
 ## Área interna
 
-`/app` es el shell protegido (sidebar, usuario y cierre de sesión), con el mismo lenguaje visual de la landing. Las rutas de los módulos que vienen son placeholders:
+`/app` es el shell protegido (sidebar, usuario y cierre de sesión), con el mismo lenguaje visual de la landing.
 
-- `/app` — Dashboard
-- `/app/clientes` — Clientes
-- `/app/cotizaciones` — Cotizaciones
-- `/app/ordenes-de-entrega` — Órdenes de entrega
+- `/app` — Dashboard (placeholder)
+- `/app/clientes` — Clientes: listado, alta, edición y detalle (logo y contactos)
+- `/app/clientes/nuevo` — Alta
+- `/app/clientes/:id` — Detalle
+- `/app/clientes/:id/editar` — Edición
+- `/app/cotizaciones` — Cotizaciones (placeholder)
+- `/app/ordenes-de-entrega` — Órdenes de entrega (placeholder)
+
+Clientes llama a `${VITE_API_URL}/api/v1` (`/clients`, `/clients/{id}/logo`, `/clients/{id}/contacts`, `/catalogs/sat`). El logo se descarga con el Bearer token y se muestra con un blob URL. Desactivar y reactivar solo se muestran si `role` es `admin`.
 
 `RequireAuth` protege ese árbol. `RequireRole` y `userHasRole` limitan un módulo a `admin` y/o `employee`. Un `403` del API no cierra la sesión.
 

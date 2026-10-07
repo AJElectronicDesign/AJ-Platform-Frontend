@@ -237,6 +237,41 @@ describe('httpRequest', () => {
     stop()
   })
 
+  it('sends multipart bodies without forcing JSON and returns blobs', async () => {
+    accessToken.save('abc', 3600)
+    const fetchMock = vi.fn<typeof fetch>(async (_input, init) => {
+      if (init?.body instanceof FormData) {
+        return new Response(
+          JSON.stringify({ hasLogo: true, logoContentType: 'image/png', logoByteSize: 4 }),
+          { status: 200 },
+        )
+      }
+
+      return new Response(new Uint8Array([1, 2, 3, 4]), {
+        status: 200,
+        headers: { 'content-type': 'image/png' },
+      })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const file = new File([Uint8Array.from([1, 2, 3, 4])], 'logo.png', { type: 'image/png' })
+    const form = new FormData()
+    form.append('file', file)
+
+    await httpRequest('/clients/id/logo', { method: 'PUT', body: form })
+    const uploadHeaders = new Headers(fetchMock.mock.calls[0]?.[1]?.headers)
+
+    expect(fetchMock.mock.calls[0]?.[1]?.body).toBe(form)
+    expect(uploadHeaders.get('Content-Type')).toBeNull()
+    expect(String(fetchMock.mock.calls[0]?.[0])).not.toContain('abc')
+
+    const blob = await httpRequest<Blob>('/clients/id/logo', { responseType: 'blob' })
+
+    expect(blob).toBeInstanceOf(Blob)
+    expect(blob.size).toBe(4)
+    expect(new Headers(fetchMock.mock.calls[1]?.[1]?.headers).get('Accept')).toContain('image/png')
+  })
+
   it('maps transport failures to a network ApiError', async () => {
     vi.stubGlobal('fetch', async () => {
       throw new TypeError('Failed to fetch')

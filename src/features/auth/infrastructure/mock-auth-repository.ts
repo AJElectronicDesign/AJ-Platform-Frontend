@@ -16,6 +16,15 @@ export const mockAuthUser: AuthUser = {
   role: 'admin',
 }
 
+export const mockEmployeeUser: AuthUser = {
+  id: 'user_employee',
+  email: 'empleado@aj-electronic-design.com',
+  name: 'Empleado Demo',
+  role: 'employee',
+}
+
+const mockUsers = [mockAuthUser, mockEmployeeUser]
+
 const MOCK_PASSWORD = 'mock-password'
 const MOCK_TOKEN_PREFIX = 'mock.'
 
@@ -59,11 +68,13 @@ export class MockAuthRepository implements AuthRepository {
       throw new AuthError('network', 'Network error')
     }
 
-    if (email !== mockAuthUser.email || credentials.password !== MOCK_PASSWORD) {
+    const user = mockUsers.find((account) => account.email === email)
+
+    if (!user || credentials.password !== MOCK_PASSWORD) {
       throw new AuthError('invalid_credentials', 'Invalid credentials')
     }
 
-    const token = `${MOCK_TOKEN_PREFIX}${mockAuthUser.id}`
+    const token = `${MOCK_TOKEN_PREFIX}${user.id}`
     const expiresIn = 60 * 60
 
     accessToken.save(token, expiresIn)
@@ -71,7 +82,7 @@ export class MockAuthRepository implements AuthRepository {
     return {
       accessToken: token,
       expiresIn,
-      user: mockAuthUser,
+      user,
     }
   }
 
@@ -86,7 +97,14 @@ export class MockAuthRepository implements AuthRepository {
       return null
     }
 
-    return mockAuthUser
+    const user = mockUsers.find((account) => token === `${MOCK_TOKEN_PREFIX}${account.id}`)
+
+    if (!user) {
+      accessToken.clear()
+      return null
+    }
+
+    return user
   }
 
   async logout(): Promise<void> {
