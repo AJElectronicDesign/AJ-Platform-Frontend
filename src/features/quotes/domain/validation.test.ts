@@ -124,3 +124,98 @@ describe('parsePatchQuote', () => {
     ])
   })
 })
+
+describe('documented quote constraints', () => {
+  it('canonicalizes an exchange rate of 6 decimals and 100 line items', () => {
+    const items = Array.from({ length: 100 }, (_, index) => ({
+      key: String(index),
+      description: index === 0 ? 'D'.repeat(500) : `Partida ${index + 1}`,
+      quantity: index === 0 ? '1.25' : '0.0001',
+      unitPrice: index === 0 ? '0' : '1',
+    }))
+    const parsed = parseCreateQuote(
+      form({
+        exchangeRate: '17.250000',
+        projectName: 'P'.repeat(200),
+        attentionTo: 'A'.repeat(200),
+        deliveryTime: 'D'.repeat(200),
+        notes: 'N'.repeat(2000),
+        requestedByName: 'R'.repeat(200),
+        requestedByEmail: `${'a'.repeat(308)}@example.com`,
+        items,
+      }),
+    )
+
+    expect(parsed.ok).toBe(true)
+
+    if (!parsed.ok) {
+      return
+    }
+
+    expect(parsed.payload.exchangeRate).toBe('17.250000')
+    expect(parsed.payload.items).toHaveLength(100)
+    expect(parsed.payload.items[0]).toEqual({
+      description: 'D'.repeat(500),
+      quantity: '1.2500',
+      unitPrice: '0.0000',
+    })
+  })
+
+  it('rejects extra decimals, a zero exchange rate, and text past the documented max lengths', () => {
+    const parsed = parseCreateQuote(
+      form({
+        exchangeRate: '0',
+        projectName: 'P'.repeat(201),
+        attentionTo: 'A'.repeat(201),
+        deliveryTime: 'D'.repeat(201),
+        notes: 'N'.repeat(2001),
+        requestedByName: 'R'.repeat(201),
+        requestedByEmail: `${'a'.repeat(309)}@example.com`,
+        items: [{ key: 'a', description: 'D'.repeat(501), quantity: '1.00001', unitPrice: '1e2' }],
+      }),
+    )
+
+    expect(parsed.ok).toBe(false)
+
+    if (parsed.ok) {
+      return
+    }
+
+    expect(parsed.issues.map((issue) => issue.path)).toEqual([
+      'projectName',
+      'attentionTo',
+      'deliveryTime',
+      'notes',
+      'exchangeRate',
+      'requestedByName',
+      'requestedByEmail',
+      'items.0.description',
+      'items.0.quantity',
+      'items.0.unitPrice',
+    ])
+  })
+
+  it('rejects a seventh exchange-rate decimal and a 101st line item', () => {
+    const tooFine = parseCreateQuote(form({ exchangeRate: '17.2500001' }))
+    const tooMany = parseCreateQuote(
+      form({
+        items: Array.from({ length: 101 }, (_, index) => ({
+          key: String(index),
+          description: `Partida ${index + 1}`,
+          quantity: '1',
+          unitPrice: '1',
+        })),
+      }),
+    )
+
+    expect(tooFine.ok).toBe(false)
+    expect(tooMany.ok).toBe(false)
+
+    if (tooFine.ok || tooMany.ok) {
+      return
+    }
+
+    expect(tooFine.issues.map((issue) => issue.path)).toEqual(['exchangeRate'])
+    expect(tooMany.issues.map((issue) => issue.path)).toEqual(['items'])
+  })
+})

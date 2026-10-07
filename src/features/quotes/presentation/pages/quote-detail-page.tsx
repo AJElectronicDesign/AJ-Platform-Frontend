@@ -15,6 +15,7 @@ import {
   formatMoney,
   formatQuoteDate,
   formatQuoteDateTime,
+  quoteEventSentence,
 } from '@/features/quotes/presentation/format'
 import { quoteBannerMessage } from '@/features/quotes/presentation/messages'
 import { QuotesPage } from '@/features/quotes/presentation/quotes-page'
@@ -353,25 +354,54 @@ export function QuoteDetailPage() {
 
               <section className="rounded-3xl border border-border bg-white p-5 shadow-sm sm:p-6">
                 <h2 className={AppTextStyles.h3}>{copy.timeline}</h2>
-                {quote.sentAt || quote.acceptedAt || quote.rejectedAt ? (
-                  <dl className="mt-4 grid gap-4 sm:grid-cols-2">
-                    {quote.sentAt ? <Fact label={copy.sentAt} value={formatQuoteDateTime(quote.sentAt, locale)} /> : null}
-                    {quote.acceptedAt ? (
-                      <Fact label={copy.acceptedAt} value={formatQuoteDateTime(quote.acceptedAt, locale)} />
-                    ) : null}
-                    {quote.rejectedAt ? (
-                      <Fact label={copy.rejectedAt} value={formatQuoteDateTime(quote.rejectedAt, locale)} />
-                    ) : null}
-                    <Fact label={copy.createdAt} value={formatQuoteDateTime(quote.createdAt, locale)} />
-                  </dl>
-                ) : (
-                  <div className="mt-4">
-                    <p className={AppTextStyles.bodySm}>{copy.timelineEmpty}</p>
-                    <p className={cn(AppTextStyles.caption, 'mt-2')}>
-                      {copy.createdAt}: {formatQuoteDateTime(quote.createdAt, locale)}
-                    </p>
-                  </div>
+                {quote.sentAt || quote.acceptedAt || quote.rejectedAt ? null : (
+                  <p className={cn(AppTextStyles.bodySm, 'mt-4')}>{copy.timelineEmpty}</p>
                 )}
+                <ol className="mt-4 space-y-3">
+                  <li className={AppTextStyles.bodyMd}>
+                    {quoteEventSentence(
+                      { withName: copy.createdBy, withoutName: copy.createdOn },
+                      quote.createdBy,
+                      formatQuoteDateTime(quote.createdAt, locale),
+                    )}
+                  </li>
+                  {quote.updatedAt !== quote.createdAt ? (
+                    <li className={AppTextStyles.bodyMd}>
+                      {quoteEventSentence(
+                        { withName: copy.updatedBy, withoutName: copy.updatedOn },
+                        quote.updatedBy,
+                        formatQuoteDateTime(quote.updatedAt, locale),
+                      )}
+                    </li>
+                  ) : null}
+                  {quote.sentAt ? (
+                    <li className={AppTextStyles.bodyMd}>
+                      {quoteEventSentence(
+                        { withName: copy.sentBy, withoutName: copy.sentOn },
+                        quote.sentBy,
+                        formatQuoteDateTime(quote.sentAt, locale),
+                      )}
+                    </li>
+                  ) : null}
+                  {quote.acceptedAt ? (
+                    <li className={AppTextStyles.bodyMd}>
+                      {quoteEventSentence(
+                        { withName: copy.acceptedBy, withoutName: copy.acceptedOn },
+                        quote.acceptedBy,
+                        formatQuoteDateTime(quote.acceptedAt, locale),
+                      )}
+                    </li>
+                  ) : null}
+                  {quote.rejectedAt ? (
+                    <li className={AppTextStyles.bodyMd}>
+                      {quoteEventSentence(
+                        { withName: copy.rejectedBy, withoutName: copy.rejectedOn },
+                        quote.rejectedBy,
+                        formatQuoteDateTime(quote.rejectedAt, locale),
+                      )}
+                    </li>
+                  ) : null}
+                </ol>
               </section>
             </div>
 

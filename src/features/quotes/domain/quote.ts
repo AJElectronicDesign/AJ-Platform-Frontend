@@ -20,6 +20,12 @@ export interface QuoteClientSummary {
   quotePrefix: string
 }
 
+/** Live user row. The quote property is null when that user id is null. `name` is null when the user row is gone. */
+export interface QuoteActor {
+  id: string
+  name: string | null
+}
+
 export interface QuoteItem {
   id: string
   position: number
@@ -51,12 +57,17 @@ export interface Quote {
   total: string
   sentAt: string | null
   sentByUserId: string | null
+  sentBy: QuoteActor | null
   acceptedAt: string | null
   acceptedByUserId: string | null
+  acceptedBy: QuoteActor | null
   rejectedAt: string | null
   rejectedByUserId: string | null
+  rejectedBy: QuoteActor | null
   createdByUserId: string | null
+  createdBy: QuoteActor | null
   updatedByUserId: string | null
+  updatedBy: QuoteActor | null
   createdAt: string
   updatedAt: string
   version: string

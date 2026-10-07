@@ -655,10 +655,20 @@ export interface QuotesCatalog {
     timeline: string
     timelineEmpty: string
     sentAt: string
+    sentBy: string
+    sentOn: string
     acceptedAt: string
+    acceptedBy: string
+    acceptedOn: string
     rejectedAt: string
+    rejectedBy: string
+    rejectedOn: string
     createdAt: string
+    createdBy: string
+    createdOn: string
     updatedAt: string
+    updatedBy: string
+    updatedOn: string
     none: string
   }
   clientSection: {
