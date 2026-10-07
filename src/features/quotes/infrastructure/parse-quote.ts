@@ -3,6 +3,7 @@ import {
   isQuoteStatus,
   isQuoteType,
   type Quote,
+  type QuoteActor,
   type QuoteClientSummary,
   type QuoteDetail,
   type QuoteItem,
@@ -76,6 +77,32 @@ function expectInteger(value: unknown): number {
   return value
 }
 
+function parseActor(value: unknown): QuoteActor | null {
+  if (value === null) {
+    return null
+  }
+
+  const record = asRecord(value)
+  const name = record.name
+
+  if (!('name' in record) || (name !== null && typeof name !== 'string')) {
+    throw new InvalidQuoteResponseError()
+  }
+
+  return {
+    id: expectString(record, 'id'),
+    name,
+  }
+}
+
+function expectActor(record: Record<string, unknown>, key: string): QuoteActor | null {
+  if (!(key in record)) {
+    throw new InvalidQuoteResponseError()
+  }
+
+  return parseActor(record[key])
+}
+
 function parseClientSummary(value: unknown): QuoteClientSummary {
   const record = asRecord(value)
 
@@ -141,12 +168,17 @@ export function parseQuote(value: unknown): Quote {
     total: expectString(record, 'total'),
     sentAt: expectNullableString(record, 'sentAt'),
     sentByUserId: expectNullableString(record, 'sentByUserId'),
+    sentBy: expectActor(record, 'sentBy'),
     acceptedAt: expectNullableString(record, 'acceptedAt'),
     acceptedByUserId: expectNullableString(record, 'acceptedByUserId'),
+    acceptedBy: expectActor(record, 'acceptedBy'),
     rejectedAt: expectNullableString(record, 'rejectedAt'),
     rejectedByUserId: expectNullableString(record, 'rejectedByUserId'),
+    rejectedBy: expectActor(record, 'rejectedBy'),
     createdByUserId: expectNullableString(record, 'createdByUserId'),
+    createdBy: expectActor(record, 'createdBy'),
     updatedByUserId: expectNullableString(record, 'updatedByUserId'),
+    updatedBy: expectActor(record, 'updatedBy'),
     createdAt: expectString(record, 'createdAt'),
     updatedAt: expectString(record, 'updatedAt'),
     version: expectString(record, 'version'),

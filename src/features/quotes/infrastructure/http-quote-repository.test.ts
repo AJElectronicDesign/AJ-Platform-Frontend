@@ -31,12 +31,17 @@ const quote = {
   total: '3481.16',
   sentAt: null,
   sentByUserId: null,
+  sentBy: null,
   acceptedAt: null,
   acceptedByUserId: null,
+  acceptedBy: null,
   rejectedAt: null,
   rejectedByUserId: null,
+  rejectedBy: null,
   createdByUserId: userId,
+  createdBy: { id: userId, name: 'Ada Admin' },
   updatedByUserId: userId,
+  updatedBy: { id: userId, name: 'Ada Admin' },
   createdAt: '2026-10-07T15:00:00.000Z',
   updatedAt: '2026-10-07T15:00:00.000Z',
   version: 'AAAAAAAAAAE=',
@@ -150,6 +155,8 @@ describe('HttpQuoteRepository', () => {
     expect(created.folio).toBe('ACME_00001')
     expect(created.items[0]?.lineTotal).toBe('3001.00')
     expect(created.notes).toBe('Precios en moneda de la cotización.')
+    expect(created.createdBy).toEqual({ id: userId, name: 'Ada Admin' })
+    expect(created.sentBy).toBeNull()
     expect(url).toBe('http://api.test/api/v1/quotes')
     expect(init.method).toBe('POST')
     expect(JSON.parse(String(init.body))).toEqual(payload)
@@ -241,5 +248,46 @@ describe('HttpQuoteRepository', () => {
     installFetch(async () => jsonResponse({ quote }))
 
     await expect(repository.get(quoteId)).rejects.toMatchObject({ code: 'invalid_response' })
+  })
+
+  it('reads a live actor name and a missing user as name null', async () => {
+    accessToken.save('secret-token', 3600)
+    installFetch(async () =>
+      jsonResponse({
+        quote: {
+          ...detail,
+          status: 'sent',
+          sentAt: '2026-10-08T18:30:00.000Z',
+          sentByUserId: userId,
+          sentBy: { id: userId, name: 'Brayan Olivares' },
+          updatedBy: { id: userId, name: null },
+        },
+      }),
+    )
+
+    const loaded = await repository.get(quoteId)
+
+    expect(loaded.sentBy).toEqual({ id: userId, name: 'Brayan Olivares' })
+    expect(loaded.updatedBy).toEqual({ id: userId, name: null })
+    expect(loaded.acceptedBy).toBeNull()
+  })
+
+  it('rejects a quote that omits an actor or returns a name that is not text', async () => {
+    accessToken.save('secret-token', 3600)
+    const { sentBy: _sentBy, ...withoutSentBy } = quote
+    installFetch(async () => jsonResponse({ items: [withoutSentBy], page: 1, pageSize: 20, total: 1 }))
+
+    await expect(repository.list({ page: 1, pageSize: 20 })).rejects.toMatchObject({ code: 'invalid_response' })
+
+    installFetch(async () =>
+      jsonResponse({
+        items: [{ ...quote, createdBy: { id: userId } }],
+        page: 1,
+        pageSize: 20,
+        total: 1,
+      }),
+    )
+
+    await expect(repository.list({ page: 1, pageSize: 20 })).rejects.toMatchObject({ code: 'invalid_response' })
   })
 })
