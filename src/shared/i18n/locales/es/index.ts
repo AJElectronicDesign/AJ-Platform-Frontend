@@ -5,6 +5,7 @@ import { common } from './common'
 import { company } from './company'
 import { home } from './home'
 import { navigation } from './navigation'
+import { quotes } from './quotes'
 import type { Catalogs } from '@/shared/i18n/types'
 
 export const es: Catalogs = {
@@ -15,4 +16,5 @@ export const es: Catalogs = {
   app,
   auth,
   clients,
+  quotes,
 }

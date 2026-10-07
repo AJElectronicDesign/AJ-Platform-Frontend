@@ -13,6 +13,7 @@ import {
 import { mapClientError } from '@/features/clients/domain/map-client-error'
 import { parseContactForm, parseContactPatch } from '@/features/clients/domain/validation'
 import { ClientsPage } from '@/features/clients/presentation/clients-page'
+import { ClientQuotesSection } from '@/features/quotes/presentation/components/client-quotes-section'
 import { ClientLogo } from '@/features/clients/presentation/components/client-logo'
 import { ConfirmDialog } from '@/features/clients/presentation/components/confirm-dialog'
 import { ContactDialog } from '@/features/clients/presentation/components/contact-dialog'
@@ -404,6 +405,7 @@ export function ClientDetailPage() {
               }}
             />
           </div>
+          <ClientQuotesSection clientId={client.id} />
         </div>
       ) : null}
 
