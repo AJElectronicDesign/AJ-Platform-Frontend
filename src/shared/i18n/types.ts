@@ -258,7 +258,6 @@ export interface ClientsCatalog {
     inactive: string
     empty: string
     emptyFiltered: string
-    primaryContactNote: string
     loading: string
     retry: string
     previous: string
@@ -339,6 +338,35 @@ export interface ClientsCatalog {
     contactPosition: string
     contactEmail: string
     contactPhone: string
+  }
+  /**
+   * Translations for `VALIDATION_ERROR` `details[].code`.
+   * An unknown code falls back to the server `message`.
+   */
+  detailCodes: {
+    REQUIRED: string
+    TOO_LONG: string
+    INVALID_TYPE: string
+    EMAIL_INVALID: string
+    PHONE_COUNTRY_CODE_INVALID: string
+    PHONE_INVALID: string
+    CONTACT_PHONE_INVALID: string
+    QUOTE_PREFIX_INVALID: string
+    COUNTRY_INVALID: string
+    POSTAL_CODE_INVALID: string
+    INVALID_ENUM: string
+    OUT_OF_RANGE: string
+    VERSION_INVALID: string
+    UNRECOGNIZED_KEY: string
+    PHONE_PAIR_REQUIRED: string
+    INVALID_UUID: string
+    AT_LEAST_ONE_FIELD: string
+    RFC_INVALID_FORMAT: string
+    RFC_INVALID_DATE: string
+    TAX_REGIME_INVALID: string
+    CFDI_USE_INVALID: string
+    TAX_REGIME_NOT_APPLICABLE: string
+    CFDI_USE_NOT_APPLICABLE: string
   }
   errors: {
     rfcExists: string

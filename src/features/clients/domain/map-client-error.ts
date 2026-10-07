@@ -21,9 +21,13 @@ export const ClientErrorCode = {
 export interface MappedClientError {
   /** Backend `error.details` messages, keyed by path. Version is excluded. */
   fieldMessages: Record<string, string>
+  /** `details[].code` from client validation, keyed by path. */
+  fieldDetailCodes: Record<string, string>
   /**
-   * Stable API codes the UI translates. These win over English detail text
-   * for RFC and quote-prefix conflicts, which the API sends without a path.
+   * Conflict codes translated in the UI. Set for `CLIENT_RFC_EXISTS` and
+   * `CLIENT_QUOTE_PREFIX_EXISTS` even when `details` also name the field, so
+   * the English server message is not shown. Also the fallback when a 409
+   * omits `details[].path`.
    */
   fieldCodes: Record<string, string>
   versionConflict: boolean
@@ -35,6 +39,7 @@ export interface MappedClientError {
 function emptyMapped(overrides: Partial<MappedClientError> = {}): MappedClientError {
   return {
     fieldMessages: {},
+    fieldDetailCodes: {},
     fieldCodes: {},
     versionConflict: false,
     bannerCode: 'unknown',
@@ -58,6 +63,7 @@ export function mapClientError(error: unknown): MappedClientError {
   }
 
   const fieldMessages: Record<string, string> = {}
+  const fieldDetailCodes: Record<string, string> = {}
   let rootMessage: string | null = null
 
   for (const detail of error.details) {
@@ -71,6 +77,10 @@ export function mapClientError(error: unknown): MappedClientError {
     }
 
     fieldMessages[detail.path] = detail.message
+
+    if (detail.code) {
+      fieldDetailCodes[detail.path] = detail.code
+    }
   }
 
   const fieldCodes: Record<string, string> = {}
@@ -136,6 +146,7 @@ export function mapClientError(error: unknown): MappedClientError {
 
   return {
     fieldMessages,
+    fieldDetailCodes,
     fieldCodes,
     versionConflict,
     bannerCode,

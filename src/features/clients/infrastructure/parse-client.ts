@@ -4,7 +4,9 @@ import type {
   ClientContact,
   ClientDetail,
   ClientList,
+  ClientListItem,
   Currency,
+  PrimaryContactSummary,
   LogoUploadResult,
   SatAppliesTo,
   SatCatalog,
@@ -168,6 +170,34 @@ export function parseContactEnvelope(value: unknown): ClientContact {
   return parseContact(record.contact)
 }
 
+function parsePrimaryContact(value: unknown): PrimaryContactSummary | null {
+  if (value === null) {
+    return null
+  }
+
+  const record = asRecord(value)
+
+  return {
+    id: expectString(record, 'id'),
+    name: expectString(record, 'name'),
+    email: expectNullableString(record, 'email'),
+    phone: expectNullableString(record, 'phone'),
+  }
+}
+
+export function parseClientListItem(value: unknown): ClientListItem {
+  const record = asRecord(value)
+
+  if (!Object.prototype.hasOwnProperty.call(record, 'primaryContact')) {
+    throw new InvalidClientResponseError()
+  }
+
+  return {
+    ...parseClient(record),
+    primaryContact: parsePrimaryContact(record.primaryContact),
+  }
+}
+
 export function parseClientList(value: unknown): ClientList {
   const record = asRecord(value)
 
@@ -191,7 +221,7 @@ export function parseClientList(value: unknown): ClientList {
   }
 
   return {
-    items: record.items.map(parseClient),
+    items: record.items.map(parseClientListItem),
     page,
     pageSize,
     total,

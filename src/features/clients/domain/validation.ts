@@ -185,9 +185,12 @@ function validateClientFields(
     issues.push(issue('phone', 'phone'))
   }
 
+  // The stored client has both sides or neither. The path is the side that is
+  // missing, matching PHONE_PAIR_REQUIRED. Create treats an empty input as null.
+  // Edit validates the form, which is the pair after the change, so changing
+  // only the number while the stored country code stays filled is valid.
   if ((phoneCountryCode == null) !== (phone == null)) {
-    issues.push(issue('phone', 'phonePair'))
-    issues.push(issue('phoneCountryCode', 'phonePair'))
+    issues.push(issue(phone != null ? 'phoneCountryCode' : 'phone', 'phonePair'))
   }
 
   const currency = input.currency.trim()
@@ -356,8 +359,14 @@ export function parseClientPatch(
     changed = true
   }
 
-  if (next.phoneCountryCode !== original.phoneCountryCode || next.phone !== original.phone) {
+  // A one-sided change is valid when the other side is already stored.
+  // Clearing only one side is rejected above, on the missing field.
+  if (next.phoneCountryCode !== original.phoneCountryCode) {
     patch.phoneCountryCode = next.phoneCountryCode
+    changed = true
+  }
+
+  if (next.phone !== original.phone) {
     patch.phone = next.phone
     changed = true
   }

@@ -82,6 +82,42 @@ describe('httpRequest', () => {
     })
   })
 
+  it('keeps a validation detail code and still accepts auth details without one', async () => {
+    vi.stubGlobal(
+      'fetch',
+      async () =>
+        new Response(
+          JSON.stringify({
+            error: {
+              code: 'VALIDATION_ERROR',
+              message: 'Request validation failed',
+              details: [
+                {
+                  path: 'phone',
+                  message: 'El teléfono y la clave de país deben indicarse juntos o dejarse vacíos',
+                  code: 'PHONE_PAIR_REQUIRED',
+                },
+                { path: 'email', message: 'Invalid email' },
+              ],
+            },
+          }),
+          { status: 400 },
+        ),
+    )
+
+    await expect(httpRequest('/clients', { auth: false })).rejects.toMatchObject({
+      code: 'VALIDATION_ERROR',
+      details: [
+        {
+          path: 'phone',
+          message: 'El teléfono y la clave de país deben indicarse juntos o dejarse vacíos',
+          code: 'PHONE_PAIR_REQUIRED',
+        },
+        { path: 'email', message: 'Invalid email' },
+      ],
+    })
+  })
+
   it('ends the session instead of sending a request without a valid token', async () => {
     const fetchMock = vi.fn<typeof fetch>()
     vi.stubGlobal('fetch', fetchMock)

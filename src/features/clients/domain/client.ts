@@ -69,8 +69,20 @@ export interface ClientDetail extends Client {
   contacts: ClientContact[]
 }
 
+/** Contact with `isPrimary` on a list row. Absent from `GET /clients/:id`. */
+export interface PrimaryContactSummary {
+  id: string
+  name: string
+  email: string | null
+  phone: string | null
+}
+
+export interface ClientListItem extends Client {
+  primaryContact: PrimaryContactSummary | null
+}
+
 export interface ClientList {
-  items: Client[]
+  items: ClientListItem[]
   page: number
   pageSize: number
   total: number

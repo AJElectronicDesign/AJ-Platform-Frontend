@@ -136,12 +136,16 @@ describe('parseClientForm', () => {
     expect(parseClientForm(form({ quotePrefix: 'bosch01' }), catalog).ok).toBe(true)
   })
 
-  it('requires the calling code and phone together', () => {
-    expect(issueKeys(form({ phoneCountryCode: '+52', phone: '' }))).toEqual(
-      expect.arrayContaining(['phone:phonePair', 'phoneCountryCode:phonePair']),
+  it('requires the calling code and phone together, on the side that is missing', () => {
+    expect(issueKeys(form({ phoneCountryCode: '+52', phone: '' }))).toContain('phone:phonePair')
+    expect(issueKeys(form({ phoneCountryCode: '+52', phone: '' }))).not.toContain(
+      'phoneCountryCode:phonePair',
     )
-    expect(issueKeys(form({ phoneCountryCode: '', phone: '3333333333' }))).toEqual(
-      expect.arrayContaining(['phone:phonePair', 'phoneCountryCode:phonePair']),
+    expect(issueKeys(form({ phoneCountryCode: '', phone: '3333333333' }))).toContain(
+      'phoneCountryCode:phonePair',
+    )
+    expect(issueKeys(form({ phoneCountryCode: '', phone: '3333333333' }))).not.toContain(
+      'phone:phonePair',
     )
     expect(issueKeys(form({ phoneCountryCode: '52', phone: '3333333333' }))).toContain(
       'phoneCountryCode:phoneCode',
@@ -230,6 +234,82 @@ describe('parseClientPatch', () => {
     expect(parsed.payload.phone).toBeNull()
     expect(parsed.payload.phoneCountryCode).toBeNull()
     expect(parsed.payload.version).toBe('AAAAAAAAAAE=')
+  })
+
+  it('accepts a new phone when the country code is already stored', () => {
+    const parsed = parseClientPatch(
+      form({
+        tradeName: 'Acme',
+        email: 'compras@acme.example',
+        phoneCountryCode: '+52',
+        phone: '4444444444',
+        paymentTermsDays: '30',
+        street: 'Av. Ejemplo',
+        exteriorNumber: '100',
+        colonia: 'Centro',
+        city: 'Zapopan',
+        state: 'Jalisco',
+        postalCode: '45050',
+      }),
+      catalog,
+      original,
+    )
+
+    expect(parsed).toEqual({
+      ok: true,
+      payload: { phone: '4444444444', version: 'AAAAAAAAAAE=' },
+    })
+  })
+
+  it('rejects clearing only one side of a stored phone pair', () => {
+    const clearedPhone = parseClientPatch(
+      form({
+        tradeName: 'Acme',
+        email: 'compras@acme.example',
+        phoneCountryCode: '+52',
+        phone: '',
+        paymentTermsDays: '30',
+        street: 'Av. Ejemplo',
+        exteriorNumber: '100',
+        colonia: 'Centro',
+        city: 'Zapopan',
+        state: 'Jalisco',
+        postalCode: '45050',
+      }),
+      catalog,
+      original,
+    )
+    const clearedCode = parseClientPatch(
+      form({
+        tradeName: 'Acme',
+        email: 'compras@acme.example',
+        phoneCountryCode: '',
+        phone: '3333333333',
+        paymentTermsDays: '30',
+        street: 'Av. Ejemplo',
+        exteriorNumber: '100',
+        colonia: 'Centro',
+        city: 'Zapopan',
+        state: 'Jalisco',
+        postalCode: '45050',
+      }),
+      catalog,
+      original,
+    )
+
+    expect(clearedPhone.ok).toBe(false)
+    expect(clearedCode.ok).toBe(false)
+
+    if (clearedPhone.ok || clearedCode.ok) {
+      return
+    }
+
+    expect(clearedPhone.issues.map((issue) => `${issue.path}:${issue.key}`)).toEqual([
+      'phone:phonePair',
+    ])
+    expect(clearedCode.issues.map((issue) => `${issue.path}:${issue.key}`)).toEqual([
+      'phoneCountryCode:phonePair',
+    ])
   })
 
   it('returns null when nothing but the version would be sent', () => {

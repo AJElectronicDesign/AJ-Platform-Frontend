@@ -3,7 +3,9 @@ import type {
   ClientContact,
   ClientDetail,
   ClientList,
+  ClientListItem,
   CreateClientPayload,
+  PrimaryContactSummary,
   CreateContactPayload,
   ListClientsQuery,
   LogoUploadResult,
@@ -226,6 +228,28 @@ function nextVersion(): string {
   return btoa(binary)
 }
 
+function toPrimaryContact(client: StoredClient): PrimaryContactSummary | null {
+  const contact = client.contacts.find((item) => item.isPrimary)
+
+  if (!contact) {
+    return null
+  }
+
+  return {
+    id: contact.id,
+    name: contact.name,
+    email: contact.email,
+    phone: contact.phone,
+  }
+}
+
+function toListItem(client: StoredClient): ClientListItem {
+  return {
+    ...toClient(client),
+    primaryContact: toPrimaryContact(client),
+  }
+}
+
 function toClient(client: StoredClient): Client {
   return {
     id: client.id,
@@ -284,7 +308,9 @@ function assertUnique(client: StoredClient | null, rfc: string, quotePrefix: str
     }
 
     if (existing.rfc === rfc && !isGenericRfc(rfc)) {
-      throw new ApiError(409, 'A client with this RFC already exists', 'CLIENT_RFC_EXISTS')
+      throw new ApiError(409, 'A client with this RFC already exists', 'CLIENT_RFC_EXISTS', [
+        { path: 'rfc', message: 'A client with this RFC already exists' },
+      ])
     }
 
     if (existing.quotePrefix === quotePrefix) {
@@ -292,6 +318,7 @@ function assertUnique(client: StoredClient | null, rfc: string, quotePrefix: str
         409,
         'A client with this quote prefix already exists',
         'CLIENT_QUOTE_PREFIX_EXISTS',
+        [{ path: 'quotePrefix', message: 'A client with this quote prefix already exists' }],
       )
     }
   }
@@ -353,7 +380,7 @@ export class MockClientRepository implements ClientRepository {
     const start = (query.page - 1) * query.pageSize
 
     return {
-      items: filtered.slice(start, start + query.pageSize).map((client) => toClient(client)),
+      items: filtered.slice(start, start + query.pageSize).map((client) => toListItem(client)),
       page: query.page,
       pageSize: query.pageSize,
       total: filtered.length,
@@ -386,6 +413,20 @@ export class MockClientRepository implements ClientRepository {
     const quotePrefix = body.quotePrefix ?? client.quotePrefix
     assertUnique(client, rfc, quotePrefix)
 
+    const phoneCountryCode =
+      body.phoneCountryCode === undefined ? client.phoneCountryCode : body.phoneCountryCode
+    const phone = body.phone === undefined ? client.phone : body.phone
+
+    if ((phoneCountryCode == null) !== (phone == null)) {
+      throw new ApiError(400, 'Request validation failed', 'VALIDATION_ERROR', [
+        {
+          path: phone != null ? 'phoneCountryCode' : 'phone',
+          message: 'El teléfono y la clave de país deben indicarse juntos o dejarse vacíos',
+          code: 'PHONE_PAIR_REQUIRED',
+        },
+      ])
+    }
+
     const next: StoredClient = {
       ...client,
       rfc,
@@ -395,9 +436,8 @@ export class MockClientRepository implements ClientRepository {
       cfdiUse: body.cfdiUse ?? client.cfdiUse,
       tradeName: body.tradeName === undefined ? client.tradeName : body.tradeName,
       email: body.email === undefined ? client.email : body.email,
-      phoneCountryCode:
-        body.phoneCountryCode === undefined ? client.phoneCountryCode : body.phoneCountryCode,
-      phone: body.phone === undefined ? client.phone : body.phone,
+      phoneCountryCode,
+      phone,
       currency: body.currency ?? client.currency,
       paymentTermsDays:
         body.paymentTermsDays === undefined ? client.paymentTermsDays : body.paymentTermsDays,

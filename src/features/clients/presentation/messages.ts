@@ -37,13 +37,33 @@ function codeMessage(copy: ClientsCatalog, code: string): string | null {
   }
 }
 
+function detailCodeMessage(copy: ClientsCatalog, code: string): string | null {
+  if (Object.prototype.hasOwnProperty.call(copy.detailCodes, code)) {
+    return copy.detailCodes[code as keyof ClientsCatalog['detailCodes']]
+  }
+
+  return null
+}
+
 export function mappedToFieldErrors(
   copy: ClientsCatalog,
   mapped: MappedClientError,
 ): Record<string, string> {
   const errors: Record<string, string> = {}
 
+  for (const [path, code] of Object.entries(mapped.fieldDetailCodes)) {
+    const translated = detailCodeMessage(copy, code)
+
+    if (translated) {
+      errors[path] = translated
+    }
+  }
+
   for (const [path, code] of Object.entries(mapped.fieldCodes)) {
+    if (errors[path]) {
+      continue
+    }
+
     const message = codeMessage(copy, code)
 
     if (message) {

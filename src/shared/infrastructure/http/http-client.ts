@@ -205,6 +205,12 @@ function readDetails(value: unknown): ApiErrorDetail[] {
       return []
     }
 
-    return [{ path: record.path, message: record.message }]
+    const detail: ApiErrorDetail = { path: record.path, message: record.message }
+
+    if (typeof record.code === 'string' && record.code.trim()) {
+      detail.code = record.code
+    }
+
+    return [detail]
   })
 }

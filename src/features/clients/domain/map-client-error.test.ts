@@ -16,6 +16,7 @@ describe('mapClientError', () => {
       'address.street': 'Too big: expected string to have <=200 characters',
       phone: 'phone and phoneCountryCode must both be set or both be empty',
     })
+    expect(mapped.fieldDetailCodes).toEqual({})
     expect(mapped.bannerCode).toBeNull()
     expect(mapped.bannerMessage).toBe('At least one field is required')
     expect(mapped.versionConflict).toBe(false)
@@ -30,6 +31,54 @@ describe('mapClientError', () => {
     expect(mapped.fieldMessages).toEqual({})
     expect(mapped.bannerCode).toBeNull()
     expect(mapped.versionConflict).toBe(false)
+  })
+
+  it('maps RFC and quote-prefix conflicts by details.path and keeps the code fallback', () => {
+    const rfc = mapClientError(
+      new ApiError(409, 'A client with this RFC already exists', 'CLIENT_RFC_EXISTS', [
+        { path: 'rfc', message: 'A client with this RFC already exists' },
+      ]),
+    )
+    const prefix = mapClientError(
+      new ApiError(
+        409,
+        'A client with this quote prefix already exists',
+        'CLIENT_QUOTE_PREFIX_EXISTS',
+        [{ path: 'quotePrefix', message: 'A client with this quote prefix already exists' }],
+      ),
+    )
+
+    expect(rfc.fieldMessages.rfc).toBe('A client with this RFC already exists')
+    expect(rfc.fieldCodes.rfc).toBe('CLIENT_RFC_EXISTS')
+    expect(prefix.fieldMessages.quotePrefix).toBe('A client with this quote prefix already exists')
+    expect(prefix.fieldCodes.quotePrefix).toBe('CLIENT_QUOTE_PREFIX_EXISTS')
+  })
+
+  it('keeps validation detail codes and auth-style details that have no code', () => {
+    const pair = mapClientError(
+      new ApiError(400, 'Request validation failed', 'VALIDATION_ERROR', [
+        {
+          path: 'phone',
+          message: 'El teléfono y la clave de país deben indicarse juntos o dejarse vacíos',
+          code: 'PHONE_PAIR_REQUIRED',
+        },
+        { path: 'legalName', message: 'Este campo es obligatorio', code: 'REQUIRED' },
+        { path: 'notes', message: 'Mensaje no catalogado', code: 'NOT_A_REAL_CODE' },
+      ]),
+    )
+    const auth = mapClientError(
+      new ApiError(400, 'Request validation failed', 'VALIDATION_ERROR', [
+        { path: 'email', message: 'Invalid email' },
+      ]),
+    )
+
+    expect(pair.fieldDetailCodes).toEqual({
+      phone: 'PHONE_PAIR_REQUIRED',
+      legalName: 'REQUIRED',
+      notes: 'NOT_A_REAL_CODE',
+    })
+    expect(auth.fieldDetailCodes).toEqual({})
+    expect(auth.fieldMessages.email).toBe('Invalid email')
   })
 
   it('maps a quote-prefix conflict to that field', () => {

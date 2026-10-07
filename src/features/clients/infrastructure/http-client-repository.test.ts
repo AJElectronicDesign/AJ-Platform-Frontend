@@ -85,7 +85,24 @@ describe('HttpClientRepository', () => {
 
   it('lists clients with the bearer token and without putting the token in the URL', async () => {
     accessToken.save('secret-token', 3600)
-    installFetch(async () => jsonResponse({ items: [client], page: 2, pageSize: 20, total: 21 }))
+    installFetch(async () =>
+      jsonResponse({
+        items: [
+          {
+            ...client,
+            primaryContact: {
+              id: contact.id,
+              name: contact.name,
+              email: contact.email,
+              phone: contact.phone,
+            },
+          },
+        ],
+        page: 2,
+        pageSize: 20,
+        total: 21,
+      }),
+    )
 
     const result = await repository.list({
       q: 'acme norte',
@@ -96,6 +113,12 @@ describe('HttpClientRepository', () => {
     const { url, init } = lastCall()
 
     expect(result.items[0]?.legalName).toBe('Acme Industrial SA de CV')
+    expect(result.items[0]?.primaryContact).toEqual({
+      id: contact.id,
+      name: contact.name,
+      email: contact.email,
+      phone: contact.phone,
+    })
     expect(result.total).toBe(21)
     expect(url).toBe('http://api.test/api/v1/clients?q=acme+norte&active=all&page=2&pageSize=20')
     expect(url).not.toContain('secret-token')
@@ -141,7 +164,7 @@ describe('HttpClientRepository', () => {
           error: {
             code: 'CLIENT_RFC_EXISTS',
             message: 'A client with this RFC already exists',
-            details: [],
+            details: [{ path: 'rfc', message: 'A client with this RFC already exists' }],
           },
         },
         409,
@@ -153,7 +176,7 @@ describe('HttpClientRepository', () => {
     ).rejects.toMatchObject({
       status: 409,
       code: 'CLIENT_RFC_EXISTS',
-      details: [],
+      details: [{ path: 'rfc', message: 'A client with this RFC already exists' }],
     })
 
     const { url, init } = lastCall()

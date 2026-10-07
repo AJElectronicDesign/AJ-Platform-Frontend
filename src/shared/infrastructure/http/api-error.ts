@@ -1,6 +1,11 @@
 export interface ApiErrorDetail {
   path: string
   message: string
+  /**
+   * Stable code on client `VALIDATION_ERROR` details.
+   * Auth details stay `{ path, message }` and omit this.
+   */
+  code?: string
 }
 
 /**

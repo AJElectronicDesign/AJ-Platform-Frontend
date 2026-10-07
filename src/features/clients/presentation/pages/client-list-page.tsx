@@ -194,7 +194,9 @@ export function ClientListPage() {
                   </th>
                   <td className="px-4 py-3 text-ink-muted">{displayText(client.tradeName)}</td>
                   <td className="px-4 py-3 font-mono text-xs tracking-wide text-ink">{client.rfc}</td>
-                  <td className="px-4 py-3 text-ink-muted">{t.clients.detail.none}</td>
+                  <td className="px-4 py-3 text-ink-muted">
+                    {displayText(client.primaryContact?.name)}
+                  </td>
                   <td className="px-4 py-3 text-ink">{client.currency}</td>
                   <td className="px-4 py-3">
                     <Badge className={client.isActive ? undefined : 'bg-surface-muted text-ink-muted'}>
@@ -206,10 +208,6 @@ export function ClientListPage() {
             </tbody>
           </table>
         </div>
-      ) : null}
-
-      {result && result.items.length > 0 ? (
-        <p className={cn(AppTextStyles.caption, 'mt-3')}>{copy.primaryContactNote}</p>
       ) : null}
 
       {result && total > CLIENT_PAGE_SIZE ? (
