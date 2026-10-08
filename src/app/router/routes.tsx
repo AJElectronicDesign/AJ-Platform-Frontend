@@ -10,6 +10,10 @@ import { LandingPage } from '@/features/landing/presentation/pages/landing-page'
 import { ClientDetailPage } from '@/features/clients/presentation/pages/client-detail-page'
 import { ClientFormPage } from '@/features/clients/presentation/pages/client-form-page'
 import { ClientListPage } from '@/features/clients/presentation/pages/client-list-page'
+import { DeliveryCertificatePage } from '@/features/delivery-orders/presentation/pages/delivery-certificate-page'
+import { DeliveryOrderDetailPage } from '@/features/delivery-orders/presentation/pages/delivery-order-detail-page'
+import { DeliveryOrderListPage } from '@/features/delivery-orders/presentation/pages/delivery-order-list-page'
+import { RegisterDeliveryPage } from '@/features/delivery-orders/presentation/pages/register-delivery-page'
 import { QuoteDetailPage } from '@/features/quotes/presentation/pages/quote-detail-page'
 import { QuoteFormPage } from '@/features/quotes/presentation/pages/quote-form-page'
 import { QuoteListPage } from '@/features/quotes/presentation/pages/quote-list-page'
@@ -94,7 +98,19 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'ordenes-de-entrega',
-            element: <ModulePlaceholderPage moduleId="deliveryOrders" />,
+            element: <DeliveryOrderListPage />,
+          },
+          {
+            path: 'ordenes-de-entrega/:orderId/registrar-entrega',
+            element: <RegisterDeliveryPage />,
+          },
+          {
+            path: 'ordenes-de-entrega/:orderId/certificados/:deliveryId',
+            element: <DeliveryCertificatePage />,
+          },
+          {
+            path: 'ordenes-de-entrega/:orderId',
+            element: <DeliveryOrderDetailPage />,
           },
         ],
       },

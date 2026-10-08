@@ -182,6 +182,7 @@ export function parseQuote(value: unknown): Quote {
     createdAt: expectString(record, 'createdAt'),
     updatedAt: expectString(record, 'updatedAt'),
     version: expectString(record, 'version'),
+    deliveryOrderId: expectNullableString(record, 'deliveryOrderId'),
     client: parseClientSummary(record.client),
   }
 }

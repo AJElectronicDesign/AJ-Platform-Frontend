@@ -11,6 +11,11 @@ export const QuoteErrorCode = {
   empty: 'QUOTE_EMPTY',
   expired: 'QUOTE_EXPIRED',
   invalidTransition: 'QUOTE_INVALID_TRANSITION',
+  hasDeliveryOrder: 'QUOTE_HAS_DELIVERY_ORDER',
+  concurrentUpdate: 'CONCURRENT_UPDATE',
+  certificatePrefixInvalid: 'CERTIFICATE_PREFIX_INVALID',
+  certificatePrefixTaken: 'CERTIFICATE_PREFIX_TAKEN',
+  orderFolioExists: 'DELIVERY_ORDER_FOLIO_EXISTS',
   validation: 'VALIDATION_ERROR',
   forbidden: 'FORBIDDEN',
   network: 'network',
@@ -27,6 +32,7 @@ export interface MappedQuoteError {
    */
   fieldCodes: Record<string, string>
   versionConflict: boolean
+  retryable: boolean
   bannerCode: string | null
   bannerMessage: string | null
   aborted: boolean
@@ -38,6 +44,7 @@ function emptyMapped(overrides: Partial<MappedQuoteError> = {}): MappedQuoteErro
     fieldDetailCodes: {},
     fieldCodes: {},
     versionConflict: false,
+    retryable: false,
     bannerCode: 'unknown',
     bannerMessage: null,
     aborted: false,
@@ -81,6 +88,7 @@ export function mapQuoteError(error: unknown): MappedQuoteError {
 
   const fieldCodes: Record<string, string> = {}
   let versionConflict = false
+  let retryable = false
   let bannerCode: string | null = null
 
   switch (error.code) {
@@ -90,7 +98,24 @@ export function mapQuoteError(error: unknown): MappedQuoteError {
       break
     case QuoteErrorCode.versionConflict:
       versionConflict = true
+      retryable = true
       bannerCode = 'version_conflict'
+      break
+    case QuoteErrorCode.concurrentUpdate:
+      retryable = true
+      bannerCode = 'concurrent_update'
+      break
+    case QuoteErrorCode.hasDeliveryOrder:
+      bannerCode = 'has_delivery_order'
+      break
+    case QuoteErrorCode.certificatePrefixInvalid:
+      bannerCode = 'certificate_prefix_invalid'
+      break
+    case QuoteErrorCode.certificatePrefixTaken:
+      bannerCode = 'certificate_prefix_taken'
+      break
+    case QuoteErrorCode.orderFolioExists:
+      bannerCode = 'order_folio_exists'
       break
     case QuoteErrorCode.notFound:
       bannerCode = 'not_found'
@@ -144,6 +169,7 @@ export function mapQuoteError(error: unknown): MappedQuoteError {
     fieldDetailCodes,
     fieldCodes,
     versionConflict,
+    retryable,
     bannerCode,
     bannerMessage,
     aborted: false,

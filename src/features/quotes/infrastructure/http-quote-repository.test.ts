@@ -45,6 +45,7 @@ const quote = {
   createdAt: '2026-10-07T15:00:00.000Z',
   updatedAt: '2026-10-07T15:00:00.000Z',
   version: 'AAAAAAAAAAE=',
+  deliveryOrderId: null,
   client: {
     id: clientId,
     legalName: 'Acme Industrial SA de CV',
@@ -232,8 +233,12 @@ describe('HttpQuoteRepository', () => {
     expect(lastCall().url).toBe(`http://api.test/api/v1/quotes/${quoteId}/send`)
     expect(JSON.parse(String(lastCall().init.body))).toEqual({ version: 'AAAAAAAAAAE=' })
 
-    await repository.accept(quoteId, { version: 'AAAAAAAAAAI=' })
+    await repository.accept(quoteId, { version: 'AAAAAAAAAAI=', clientPoNumber: 'OC-100' })
     expect(lastCall().url).toBe(`http://api.test/api/v1/quotes/${quoteId}/accept`)
+    expect(JSON.parse(String(lastCall().init.body))).toEqual({
+      version: 'AAAAAAAAAAI=',
+      clientPoNumber: 'OC-100',
+    })
 
     await repository.reject(quoteId, {})
     expect(lastCall().url).toBe(`http://api.test/api/v1/quotes/${quoteId}/reject`)

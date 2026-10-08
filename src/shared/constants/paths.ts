@@ -40,6 +40,18 @@ export function appQuoteNewForClient(clientId: string): string {
   return `/app/cotizaciones/nueva?clientId=${encodeURIComponent(clientId)}`
 }
 
+export function appDeliveryOrderPath(id: string): string {
+  return `/app/ordenes-de-entrega/${encodeURIComponent(id)}`
+}
+
+export function appRegisterDeliveryPath(id: string): string {
+  return `/app/ordenes-de-entrega/${encodeURIComponent(id)}/registrar-entrega`
+}
+
+export function appDeliveryCertificatePath(orderId: string, deliveryId: string): string {
+  return `/app/ordenes-de-entrega/${encodeURIComponent(orderId)}/certificados/${encodeURIComponent(deliveryId)}`
+}
+
 export const whoWeAreHash = {
   purposeValues: 'purpose-values',
   people: 'people',

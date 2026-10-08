@@ -161,6 +161,11 @@ export const quotes: QuotesCatalog = {
     expired: 'No se puede aceptar una cotización vencida.',
     invalidTransition: 'La cotización ya no está en el estado que permite esta acción.',
     folioExists: 'Ya existe una cotización con este folio.',
+    concurrentUpdate: 'Otro cambio está en curso. Intenta de nuevo.',
+    hasDeliveryOrder: 'Esta cotización ya tiene una orden de entrega.',
+    certificatePrefixInvalid: 'El prefijo de certificados del cliente debe terminar con una letra.',
+    certificatePrefixTaken: 'El prefijo de certificados ya lo usa otro cliente.',
+    orderFolioExists: 'Ya existe una orden de entrega con este folio.',
   },
   detail: {
     backToList: 'Volver al listado',
@@ -179,7 +184,10 @@ export const quotes: QuotesCatalog = {
     deleteBody: 'Se elimina el borrador. El folio no se vuelve a usar.',
     acceptTitle: 'Aceptar cotización',
     acceptBody:
-      'La cotización quedará aceptada. En esta versión no se crea la orden de entrega; eso se hará en una fase posterior.',
+      'Al aceptar se crea la orden de entrega con el mismo folio. Puedes anotar el número de OC del cliente si ya lo tienes.',
+    clientPoNumber: 'Número de OC del cliente',
+    clientPoNumberHint: 'Opcional. Máximo 80 caracteres.',
+    viewDeliveryOrder: 'Ver orden de entrega',
     rejectTitle: 'Rechazar cotización',
     rejectBody: 'La cotización quedará rechazada.',
     expiredAccept: 'No se puede aceptar porque la vigencia ya venció. Puedes rechazarla o regresarla a borrador.',
@@ -241,7 +249,7 @@ export const quotes: QuotesCatalog = {
   notice: {
     saved: 'Cotización guardada. Los totales son los que calculó el servidor.',
     copied: 'Se creó un borrador nuevo con el siguiente folio.',
-    accepted: 'La cotización se aceptó. La orden de entrega se creará en una fase posterior.',
+    accepted: 'La cotización se aceptó y se creó la orden de entrega.',
     sent: 'La cotización se marcó como enviada.',
     rejected: 'La cotización se rechazó.',
     reverted: 'La cotización volvió a borrador.',

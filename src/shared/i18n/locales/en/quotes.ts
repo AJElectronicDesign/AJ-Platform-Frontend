@@ -161,6 +161,11 @@ export const quotes: QuotesCatalog = {
     expired: 'An expired quote cannot be accepted.',
     invalidTransition: 'The quote is no longer in a status that allows this action.',
     folioExists: 'A quote with this folio already exists.',
+    concurrentUpdate: 'Another change is in progress. Try again.',
+    hasDeliveryOrder: 'This quote already has a delivery order.',
+    certificatePrefixInvalid: 'The client certificate prefix must end with a letter.',
+    certificatePrefixTaken: 'Another client already uses that certificate prefix.',
+    orderFolioExists: 'A delivery order with this folio already exists.',
   },
   detail: {
     backToList: 'Back to the list',
@@ -179,7 +184,10 @@ export const quotes: QuotesCatalog = {
     deleteBody: 'The draft is deleted. The folio number is not reused.',
     acceptTitle: 'Accept quote',
     acceptBody:
-      'The quote will be accepted. This version does not create the delivery order; that happens in a later phase.',
+      'Accepting creates the delivery order with the same folio. You can record the client PO number if you already have it.',
+    clientPoNumber: 'Client PO number',
+    clientPoNumberHint: 'Optional. 80 characters maximum.',
+    viewDeliveryOrder: 'View delivery order',
     rejectTitle: 'Reject quote',
     rejectBody: 'The quote will be rejected.',
     expiredAccept: 'It cannot be accepted because the validity date has passed. You can reject it or return it to draft.',
@@ -241,7 +249,7 @@ export const quotes: QuotesCatalog = {
   notice: {
     saved: 'Quote saved. The totals are the ones calculated by the server.',
     copied: 'A new draft was created with the next folio.',
-    accepted: 'The quote was accepted. The delivery order will be created in a later phase.',
+    accepted: 'The quote was accepted and the delivery order was created.',
     sent: 'The quote was marked as sent.',
     rejected: 'The quote was rejected.',
     reverted: 'The quote is a draft again.',

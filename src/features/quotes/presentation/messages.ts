@@ -110,6 +110,16 @@ export function quoteBannerMessage(copy: QuotesCatalog, mapped: MappedQuoteError
       return copy.errors.invalidTransition
     case 'folio_exists':
       return copy.errors.folioExists
+    case 'concurrent_update':
+      return copy.errors.concurrentUpdate
+    case 'has_delivery_order':
+      return copy.errors.hasDeliveryOrder
+    case 'certificate_prefix_invalid':
+      return copy.errors.certificatePrefixInvalid
+    case 'certificate_prefix_taken':
+      return copy.errors.certificatePrefixTaken
+    case 'order_folio_exists':
+      return copy.errors.orderFolioExists
     case 'validation':
       return mapped.bannerMessage || copy.errors.validation
     case null:

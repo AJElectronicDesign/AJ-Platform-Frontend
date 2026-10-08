@@ -609,6 +609,11 @@ export interface QuotesCatalog {
     expired: string
     invalidTransition: string
     folioExists: string
+    concurrentUpdate: string
+    hasDeliveryOrder: string
+    certificatePrefixInvalid: string
+    certificatePrefixTaken: string
+    orderFolioExists: string
   }
   detail: {
     backToList: string
@@ -627,6 +632,9 @@ export interface QuotesCatalog {
     deleteBody: string
     acceptTitle: string
     acceptBody: string
+    clientPoNumber: string
+    clientPoNumberHint: string
+    viewDeliveryOrder: string
     rejectTitle: string
     rejectBody: string
     expiredAccept: string
@@ -695,6 +703,242 @@ export interface QuotesCatalog {
   }
 }
 
+export interface DeliveryOrdersCatalog {
+  closeDialog: string
+  list: {
+    eyebrow: string
+    title: string
+    description: string
+    searchLabel: string
+    searchPlaceholder: string
+    statusFilter: string
+    clientFilter: string
+    clientPlaceholder: string
+    clearClient: string
+    allStatuses: string
+    folio: string
+    client: string
+    clientPo: string
+    priority: string
+    dates: string
+    startDate: string
+    dueDate: string
+    progress: string
+    status: string
+    empty: string
+    emptyFiltered: string
+    loading: string
+    retry: string
+    previous: string
+    next: string
+    page: string
+    results: string
+    errorTitle: string
+  }
+  status: {
+    pending: string
+    partial: string
+    completed: string
+    cancelled: string
+  }
+  priority: {
+    high: string
+    medium: string
+    low: string
+  }
+  detail: {
+    backToList: string
+    loading: string
+    edit: string
+    deliver: string
+    deliverDisabled: string
+    cancelOrder: string
+    cancelTitle: string
+    cancelBody: string
+    confirm: string
+    cancel: string
+    working: string
+    client: string
+    sourceQuote: string
+    viewQuote: string
+    clientPo: string
+    startDate: string
+    dueDate: string
+    priority: string
+    address: string
+    requestedBy: string
+    currency: string
+    notes: string
+    certificatePrefix: string
+    lines: string
+    description: string
+    ordered: string
+    delivered: string
+    pending: string
+    unitPrice: string
+    lineTotal: string
+    certificates: string
+    certificatesEmpty: string
+    certificateFolio: string
+    certificateDate: string
+    receivedBy: string
+    sender: string
+    subtotal: string
+    vat: string
+    total: string
+    noVat: string
+    none: string
+    unknownUser: string
+  }
+  edit: {
+    title: string
+    save: string
+    saving: string
+    cancel: string
+    clientPo: string
+    clientPoHint: string
+    startDate: string
+    dueDate: string
+    dueHint: string
+    priority: string
+    country: string
+    state: string
+    city: string
+    street: string
+    postalCode: string
+    notes: string
+    certificatePrefix: string
+    certificatePrefixHint: string
+    certificatePrefixLocked: string
+    noChanges: string
+  }
+  deliver: {
+    title: string
+    description: string
+    back: string
+    loading: string
+    deliveryDate: string
+    receivedBy: string
+    receivedByHint: string
+    notes: string
+    overrideAddress: string
+    country: string
+    state: string
+    city: string
+    street: string
+    postalCode: string
+    lines: string
+    descriptionLabel: string
+    ordered: string
+    pending: string
+    quantity: string
+    fillPending: string
+    maxHint: string
+    preview: string
+    previewHint: string
+    subtotal: string
+    vat: string
+    total: string
+    noVat: string
+    submit: string
+    submitting: string
+    disabled: string
+    noPending: string
+  }
+  certificate: {
+    back: string
+    loading: string
+    folio: string
+    date: string
+    address: string
+    receivedBy: string
+    sender: string
+    notes: string
+    progressNote: string
+    lines: string
+    description: string
+    quantity: string
+    unitPrice: string
+    lineTotal: string
+    subtotal: string
+    vat: string
+    total: string
+    noVat: string
+    none: string
+    unknownUser: string
+  }
+  validation: {
+    clientPoNumber: string
+    startDate: string
+    dueDate: string
+    dueBeforeStart: string
+    priority: string
+    country: string
+    state: string
+    city: string
+    street: string
+    postalCode: string
+    notes: string
+    certificatePrefix: string
+    deliveryDate: string
+    receivedBy: string
+    quantity: string
+    exceedsPending: string
+    atLeastOneLine: string
+    overflow: string
+  }
+  detailCodes: {
+    REQUIRED: string
+    TOO_LONG: string
+    INVALID_TYPE: string
+    INVALID_ENUM: string
+    INVALID_UUID: string
+    VERSION_INVALID: string
+    UNRECOGNIZED_KEY: string
+    AT_LEAST_ONE_FIELD: string
+    OUT_OF_RANGE: string
+    INVALID_DECIMAL: string
+    TOO_MANY_DECIMALS: string
+    TOO_MANY_DIGITS: string
+    QUANTITY_NOT_POSITIVE: string
+    DATE_INVALID: string
+    DUE_BEFORE_START: string
+    CERTIFICATE_PREFIX_INVALID: string
+    COUNTRY_INVALID: string
+    AT_LEAST_ONE_LINE: string
+    TOO_MANY_ITEMS: string
+    DUPLICATE_ORDER_LINE: string
+    ORDER_LINE_NOT_FOUND: string
+    TOTAL_OVERFLOW: string
+  }
+  errors: {
+    versionConflict: string
+    reload: string
+    retry: string
+    network: string
+    forbidden: string
+    notFound: string
+    deliveryNotFound: string
+    unknown: string
+    validation: string
+    cancelled: string
+    alreadyCancelled: string
+    hasDeliveries: string
+    completed: string
+    prefixLocked: string
+    prefixTaken: string
+    prefixInvalid: string
+    quantityExceeds: string
+    certificateFolioExists: string
+    concurrentUpdate: string
+  }
+  notice: {
+    updated: string
+    cancelled: string
+    delivered: string
+  }
+}
+
 export interface Catalogs {
   common: CommonCatalog
   navigation: NavigationCatalog
@@ -704,4 +948,5 @@ export interface Catalogs {
   auth: AuthCatalog
   clients: ClientsCatalog
   quotes: QuotesCatalog
+  deliveryOrders: DeliveryOrdersCatalog
 }
