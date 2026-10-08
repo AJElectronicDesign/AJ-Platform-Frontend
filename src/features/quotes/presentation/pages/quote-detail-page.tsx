@@ -209,7 +209,6 @@ export function QuoteDetailPage() {
       const banner = quoteBannerMessage(t.quotes, mapped)
       setAcceptError(fields.clientPoNumber ?? null)
       setAcceptBanner(fields.clientPoNumber ? null : banner)
-      setMessage(banner)
       setVersionConflict(mapped.versionConflict || mapped.retryable)
 
       if (mapped.retryable || mapped.bannerCode === 'has_delivery_order') {
@@ -334,7 +333,7 @@ export function QuoteDetailPage() {
           {actions.sendDisabledReason ? (
             <p className={cn(AppTextStyles.bodySm, 'mt-4')}>{copy.emptySend}</p>
           ) : null}
-          {!actions.showEdit && !actions.showSend && !actions.showAccept ? (
+          {!actions.showEdit && !actions.showSend && !actions.showAccept && !actions.showReject ? (
             <p className={cn(AppTextStyles.bodySm, 'mt-4 max-w-2xl')}>{copy.readOnly}</p>
           ) : null}
 

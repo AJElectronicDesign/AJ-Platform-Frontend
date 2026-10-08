@@ -52,11 +52,16 @@ describe('quoteActionState', () => {
     expect(state.showDelete).toBe(false)
   })
 
-  it('hides revert and delete when a delivery order already exists', () => {
+  it('hides accept, revert, and delete when a delivery order already exists', () => {
     expect(quoteActionState('sent', 1, true)).toMatchObject({
+      showAccept: false,
+      acceptEnabled: false,
       showRevert: false,
       showDelete: false,
-      showAccept: true,
+    })
+    expect(quoteActionState('expired', 1, true)).toMatchObject({
+      showAccept: false,
+      acceptEnabled: false,
     })
     expect(quoteActionState('draft', 1, true).showDelete).toBe(false)
   })

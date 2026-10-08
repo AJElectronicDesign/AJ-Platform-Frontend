@@ -166,3 +166,11 @@ export function mapDeliveryOrderError(error: unknown): MappedDeliveryOrderError 
     aborted: false,
   }
 }
+
+export function shouldRefreshPendingQuantities(mapped: MappedDeliveryOrderError): boolean {
+  if (mapped.bannerCode === 'quantity_exceeds') {
+    return true
+  }
+
+  return Object.values(mapped.fieldDetailCodes).includes(DeliveryOrderErrorCode.quantityExceeds)
+}

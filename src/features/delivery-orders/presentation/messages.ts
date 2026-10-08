@@ -96,6 +96,65 @@ export function mappedToFieldErrors(
   return errors
 }
 
+const DISPLAYED_DELIVERY_PATHS = new Set([
+  'deliveryDate',
+  'receivedBy',
+  'notes',
+  'lines',
+  'address.country',
+  'address.state',
+  'address.city',
+  'address.street',
+  'address.postalCode',
+])
+
+function isDisplayedDeliveryPath(path: string, submittedOrderItemIds: readonly string[]): boolean {
+  if (DISPLAYED_DELIVERY_PATHS.has(path)) {
+    return true
+  }
+
+  const match = /^lines\.(\d+)\.quantity$/.exec(path)
+
+  if (!match) {
+    return false
+  }
+
+  return submittedOrderItemIds[Number(match[1])] !== undefined
+}
+
+export function undisplayedDeliveryFieldBanner(
+  fields: Record<string, string>,
+  submittedOrderItemIds: readonly string[],
+): string | null {
+  const messages: string[] = []
+
+  for (const [path, message] of Object.entries(fields)) {
+    if (!message || isDisplayedDeliveryPath(path, submittedOrderItemIds) || messages.includes(message)) {
+      continue
+    }
+
+    messages.push(message)
+  }
+
+  return messages.length > 0 ? messages.join(' ') : null
+}
+
+export function deliverySubmitBanner(
+  copy: DeliveryOrdersCatalog,
+  mapped: MappedDeliveryOrderError,
+  fields: Record<string, string>,
+  submittedOrderItemIds: readonly string[],
+): string | null {
+  const catalog = deliveryOrderBannerMessage(copy, mapped)
+  const orphan = undisplayedDeliveryFieldBanner(fields, submittedOrderItemIds)
+
+  if (catalog && orphan && catalog !== orphan) {
+    return `${catalog} ${orphan}`
+  }
+
+  return catalog ?? orphan
+}
+
 export function deliveryOrderBannerMessage(
   copy: DeliveryOrdersCatalog,
   mapped: MappedDeliveryOrderError,

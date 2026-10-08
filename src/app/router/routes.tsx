@@ -1,6 +1,12 @@
 import type { RouteObject } from 'react-router-dom'
 import { AuthLayout } from '@/app/layouts/auth-layout'
 import { PublicLayout } from '@/app/layouts/public-layout'
+import {
+  DeliveryCertificateRoute,
+  DeliveryOrderDetailRoute,
+  DeliveryOrderListRoute,
+  RegisterDeliveryRoute,
+} from '@/app/router/delivery-order-routes'
 import { RequireAuth } from '@/features/auth/presentation/require-auth'
 import { LoginPage } from '@/features/auth/presentation/pages/login-page'
 import { WhoWeArePage } from '@/features/company/presentation/pages/who-we-are-page'
@@ -10,10 +16,6 @@ import { LandingPage } from '@/features/landing/presentation/pages/landing-page'
 import { ClientDetailPage } from '@/features/clients/presentation/pages/client-detail-page'
 import { ClientFormPage } from '@/features/clients/presentation/pages/client-form-page'
 import { ClientListPage } from '@/features/clients/presentation/pages/client-list-page'
-import { DeliveryCertificatePage } from '@/features/delivery-orders/presentation/pages/delivery-certificate-page'
-import { DeliveryOrderDetailPage } from '@/features/delivery-orders/presentation/pages/delivery-order-detail-page'
-import { DeliveryOrderListPage } from '@/features/delivery-orders/presentation/pages/delivery-order-list-page'
-import { RegisterDeliveryPage } from '@/features/delivery-orders/presentation/pages/register-delivery-page'
 import { QuoteDetailPage } from '@/features/quotes/presentation/pages/quote-detail-page'
 import { QuoteFormPage } from '@/features/quotes/presentation/pages/quote-form-page'
 import { QuoteListPage } from '@/features/quotes/presentation/pages/quote-list-page'
@@ -98,19 +100,19 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'ordenes-de-entrega',
-            element: <DeliveryOrderListPage />,
+            element: <DeliveryOrderListRoute />,
           },
           {
             path: 'ordenes-de-entrega/:orderId/registrar-entrega',
-            element: <RegisterDeliveryPage />,
+            element: <RegisterDeliveryRoute />,
           },
           {
             path: 'ordenes-de-entrega/:orderId/certificados/:deliveryId',
-            element: <DeliveryCertificatePage />,
+            element: <DeliveryCertificateRoute />,
           },
           {
             path: 'ordenes-de-entrega/:orderId',
-            element: <DeliveryOrderDetailPage />,
+            element: <DeliveryOrderDetailRoute />,
           },
         ],
       },

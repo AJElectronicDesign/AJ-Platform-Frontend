@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mapDeliveryOrderError } from '@/features/delivery-orders/domain/map-delivery-order-error'
+import { mapDeliveryOrderError, shouldRefreshPendingQuantities } from '@/features/delivery-orders/domain/map-delivery-order-error'
 import { mapLineQuantityErrors } from '@/features/delivery-orders/domain/validation'
 import { ApiError } from '@/shared/infrastructure/http/api-error'
 
@@ -20,9 +20,26 @@ describe('mapDeliveryOrderError', () => {
     })
     expect(mapped.fieldDetailCodes['lines.0.quantity']).toBe('DELIVERY_QUANTITY_EXCEEDS_PENDING')
     expect(mapped.bannerCode).toBeNull()
+    expect(shouldRefreshPendingQuantities(mapped)).toBe(true)
     expect(mapLineQuantityErrors(mapped.fieldMessages, ['line-1'])).toEqual({
       'line-1': 'La cantidad supera lo pendiente por entregar (1.5000)',
     })
+  })
+
+  it('keeps ORDER_LINE_NOT_FOUND on a path the form does not render', () => {
+    const mapped = mapDeliveryOrderError(
+      new ApiError(400, 'Request validation failed', 'VALIDATION_ERROR', [
+        {
+          path: 'lines.0.orderItemId',
+          message: 'La partida no pertenece a esta orden.',
+          code: 'ORDER_LINE_NOT_FOUND',
+        },
+      ]),
+    )
+
+    expect(mapped.bannerCode).toBeNull()
+    expect(mapped.fieldMessages['lines.0.orderItemId']).toBe('La partida no pertenece a esta orden.')
+    expect(mapped.fieldDetailCodes['lines.0.orderItemId']).toBe('ORDER_LINE_NOT_FOUND')
   })
 
   it('puts certificate prefix conflicts on the prefix field', () => {

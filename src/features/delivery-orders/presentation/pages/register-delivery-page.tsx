@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { StatusBanner } from '@/features/clients/presentation/components/status-banner'
 import { canRegisterDelivery, type CreateDeliveryPayload, type DeliveryOrderDetail } from '@/features/delivery-orders/domain/delivery-order'
-import { mapDeliveryOrderError } from '@/features/delivery-orders/domain/map-delivery-order-error'
+import { mapDeliveryOrderError, shouldRefreshPendingQuantities } from '@/features/delivery-orders/domain/map-delivery-order-error'
 import { mapLineQuantityErrors } from '@/features/delivery-orders/domain/validation'
 import { RegisterDeliveryForm } from '@/features/delivery-orders/presentation/components/register-delivery-form'
 import { DeliveryOrdersPage } from '@/features/delivery-orders/presentation/delivery-orders-page'
-import { deliveryOrderBannerMessage, mappedToFieldErrors } from '@/features/delivery-orders/presentation/messages'
+import { deliveryOrderBannerMessage, deliverySubmitBanner, mappedToFieldErrors } from '@/features/delivery-orders/presentation/messages'
 import { useDeliveryOrderRepository } from '@/features/delivery-orders/presentation/use-delivery-order-repository'
 import { appDeliveryCertificatePath, appDeliveryOrderPath } from '@/shared/constants/paths'
 import { useI18n } from '@/shared/i18n'
@@ -77,16 +77,17 @@ export function RegisterDeliveryPage() {
     } catch (error) {
       const mapped = mapDeliveryOrderError(error)
       const fields = mappedToFieldErrors(t.deliveryOrders, mapped)
+      const submittedOrderItemIds = payload.lines.map((line) => line.orderItemId)
       setServerErrors(fields)
-      setLineErrors(
-        mapLineQuantityErrors(
-          fields,
-          payload.lines.map((line) => line.orderItemId),
-        ),
-      )
-      setMessage(deliveryOrderBannerMessage(t.deliveryOrders, mapped))
+      setLineErrors(mapLineQuantityErrors(fields, submittedOrderItemIds))
+      setMessage(deliverySubmitBanner(t.deliveryOrders, mapped, fields, submittedOrderItemIds))
 
-      if (mapped.retryable || mapped.bannerCode === 'completed' || mapped.bannerCode === 'cancelled') {
+      if (
+        mapped.retryable ||
+        mapped.bannerCode === 'completed' ||
+        mapped.bannerCode === 'cancelled' ||
+        shouldRefreshPendingQuantities(mapped)
+      ) {
         try {
           const fresh = await repository.get(order.id)
           setOrder(fresh)
@@ -128,7 +129,7 @@ export function RegisterDeliveryPage() {
 
       {loadState === 'ready' && order ? (
         <RegisterDeliveryForm
-          key={order.version}
+          key={order.id}
           order={order}
           pending={pending}
           serverErrors={serverErrors}

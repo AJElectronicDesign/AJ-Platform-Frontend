@@ -19,6 +19,57 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { cn } from '@/shared/utils/cn'
 
+function mergeOrderLines(current: DeliveryFormValues, order: DeliveryOrderDetail): DeliveryFormValues {
+  const freshById = new Map(order.lines.map((line) => [line.id, line]))
+  let changed = false
+  const lines: DeliveryFormLine[] = []
+
+  for (const line of current.lines) {
+    const fresh = freshById.get(line.orderItemId)
+
+    if (!fresh) {
+      if (line.quantity.trim()) {
+        lines.push(line)
+      } else {
+        changed = true
+      }
+      continue
+    }
+
+    const stillPending = positivePending(fresh.quantityPending)
+
+    if (!stillPending && !line.quantity.trim()) {
+      changed = true
+      continue
+    }
+
+    if (line.pending === fresh.quantityPending && line.unitPrice === fresh.unitPrice) {
+      lines.push(line)
+      continue
+    }
+
+    changed = true
+    lines.push({ ...line, pending: fresh.quantityPending, unitPrice: fresh.unitPrice })
+  }
+
+  const known = new Set(lines.map((line) => line.orderItemId))
+  const added = order.lines
+    .filter((line) => positivePending(line.quantityPending) && !known.has(line.id))
+    .sort((left, right) => left.position - right.position)
+    .map((line) => ({
+      orderItemId: line.id,
+      quantity: '',
+      pending: line.quantityPending,
+      unitPrice: line.unitPrice,
+    }))
+
+  if (!changed && added.length === 0) {
+    return current
+  }
+
+  return { ...current, lines: added.length > 0 ? [...lines, ...added] : lines }
+}
+
 function positivePending(value: string): boolean {
   try {
     return compareQuantity(value, '0') > 0
@@ -80,6 +131,11 @@ export function RegisterDeliveryForm({
   useEffect(() => {
     setDismissedLineErrors({})
   }, [lineErrors])
+
+  useEffect(() => {
+    setValues((current) => mergeOrderLines(current, order))
+  }, [order])
+
   const lineFacts = useMemo(() => {
     return new Map(order.lines.map((line) => [line.id, line]))
   }, [order.lines])
