@@ -2,6 +2,7 @@ import { app } from './app'
 import { auth } from './auth'
 import { clients } from './clients'
 import { common } from './common'
+import { deliveryOrders } from './delivery-orders'
 import { company } from './company'
 import { home } from './home'
 import { navigation } from './navigation'
@@ -17,4 +18,5 @@ export const en: Catalogs = {
   auth,
   clients,
   quotes,
+  deliveryOrders,
 }

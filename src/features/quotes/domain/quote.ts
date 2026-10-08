@@ -71,6 +71,8 @@ export interface Quote {
   createdAt: string
   updatedAt: string
   version: string
+  /** Delivery order created with accept. Null until the quote is accepted. */
+  deliveryOrderId: string | null
   client: QuoteClientSummary
 }
 
@@ -139,6 +141,11 @@ export interface PatchQuotePayload {
 
 export interface QuoteTransitionPayload {
   version?: string
+}
+
+export interface AcceptQuotePayload {
+  version?: string
+  clientPoNumber?: string | null
 }
 
 export interface QuoteLineForm {

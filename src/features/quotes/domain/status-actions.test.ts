@@ -52,6 +52,20 @@ describe('quoteActionState', () => {
     expect(state.showDelete).toBe(false)
   })
 
+  it('hides accept, revert, and delete when a delivery order already exists', () => {
+    expect(quoteActionState('sent', 1, true)).toMatchObject({
+      showAccept: false,
+      acceptEnabled: false,
+      showRevert: false,
+      showDelete: false,
+    })
+    expect(quoteActionState('expired', 1, true)).toMatchObject({
+      showAccept: false,
+      acceptEnabled: false,
+    })
+    expect(quoteActionState('draft', 1, true).showDelete).toBe(false)
+  })
+
   it.each<QuoteStatus>(['accepted', 'rejected'])(
     'keeps %s read-only except for copy',
     (status) => {

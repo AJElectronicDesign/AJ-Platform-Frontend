@@ -5,6 +5,7 @@ import type {
   QuoteDetail,
   QuoteList,
   QuoteTransitionPayload,
+  AcceptQuotePayload,
 } from '@/features/quotes/domain/quote'
 
 export interface QuoteRequestOptions {
@@ -19,7 +20,7 @@ export interface QuoteRepository {
   remove(id: string): Promise<void>
   copy(id: string): Promise<QuoteDetail>
   send(id: string, body: QuoteTransitionPayload): Promise<QuoteDetail>
-  accept(id: string, body: QuoteTransitionPayload): Promise<QuoteDetail>
+  accept(id: string, body: AcceptQuotePayload): Promise<QuoteDetail>
   reject(id: string, body: QuoteTransitionPayload): Promise<QuoteDetail>
   revertToDraft(id: string, body: QuoteTransitionPayload): Promise<QuoteDetail>
 }

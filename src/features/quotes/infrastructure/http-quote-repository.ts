@@ -2,6 +2,7 @@ import type {
   CreateQuotePayload,
   ListQuotesQuery,
   PatchQuotePayload,
+  AcceptQuotePayload,
   QuoteDetail,
   QuoteList,
   QuoteTransitionPayload,
@@ -69,7 +70,7 @@ export class HttpQuoteRepository implements QuoteRepository {
     return httpRequest<unknown>(quotePath(id, '/send'), { method: 'POST', body }).then(parseQuoteEnvelope)
   }
 
-  accept(id: string, body: QuoteTransitionPayload): Promise<QuoteDetail> {
+  accept(id: string, body: AcceptQuotePayload): Promise<QuoteDetail> {
     return httpRequest<unknown>(quotePath(id, '/accept'), { method: 'POST', body }).then(parseQuoteEnvelope)
   }
 

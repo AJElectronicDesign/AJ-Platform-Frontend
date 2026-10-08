@@ -16,7 +16,11 @@ export interface QuoteActionState {
   sendDisabledReason: 'empty' | null
 }
 
-export function quoteActionState(status: QuoteStatus, itemCount: number): QuoteActionState {
+export function quoteActionState(
+  status: QuoteStatus,
+  itemCount: number,
+  hasDeliveryOrder = false,
+): QuoteActionState {
   const draft = status === 'draft'
   const sent = status === 'sent'
   const expired = status === 'expired'
@@ -26,12 +30,12 @@ export function quoteActionState(status: QuoteStatus, itemCount: number): QuoteA
     showEdit: draft,
     showSend: draft,
     sendEnabled: draft && itemCount > 0,
-    showAccept: sentLike,
-    acceptEnabled: sent,
+    showAccept: sentLike && !hasDeliveryOrder,
+    acceptEnabled: sent && !hasDeliveryOrder,
     showReject: sentLike,
-    showRevert: sentLike,
+    showRevert: sentLike && !hasDeliveryOrder,
     showCopy: true,
-    showDelete: draft,
+    showDelete: draft && !hasDeliveryOrder,
     acceptDisabledReason: expired ? 'expired' : null,
     sendDisabledReason: draft && itemCount <= 0 ? 'empty' : null,
   }

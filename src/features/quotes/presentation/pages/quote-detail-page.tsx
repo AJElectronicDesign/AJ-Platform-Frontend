@@ -6,6 +6,7 @@ import { vatRateToPercent } from '@/features/quotes/domain/money'
 import { mapQuoteError } from '@/features/quotes/domain/map-quote-error'
 import type { QuoteDetail } from '@/features/quotes/domain/quote'
 import { quoteActionState } from '@/features/quotes/domain/status-actions'
+import { AcceptQuoteDialog } from '@/features/quotes/presentation/components/accept-quote-dialog'
 import { QuoteStatusBadge } from '@/features/quotes/presentation/components/quote-status-badge'
 import { QuoteTotals } from '@/features/quotes/presentation/components/quote-totals'
 import {
@@ -17,10 +18,10 @@ import {
   formatQuoteDateTime,
   quoteEventSentence,
 } from '@/features/quotes/presentation/format'
-import { quoteBannerMessage } from '@/features/quotes/presentation/messages'
+import { mappedToFieldErrors, quoteBannerMessage } from '@/features/quotes/presentation/messages'
 import { QuotesPage } from '@/features/quotes/presentation/quotes-page'
 import { useQuoteRepository } from '@/features/quotes/presentation/use-quote-repository'
-import { appClientPath, appQuoteEditPath, appQuotePath, paths } from '@/shared/constants/paths'
+import { appClientPath, appDeliveryOrderPath, appQuoteEditPath, appQuotePath, paths } from '@/shared/constants/paths'
 import { useI18n } from '@/shared/i18n'
 import { AppTextStyles } from '@/shared/theme'
 import { Button } from '@/shared/ui/button'
@@ -80,6 +81,9 @@ export function QuoteDetailPage() {
   const [notice, setNotice] = useState<QuoteNotice | null>(() => readNotice(location.state))
   const [confirm, setConfirm] = useState<ConfirmAction | null>(null)
   const [pending, setPending] = useState<PendingAction | null>(null)
+  const [acceptError, setAcceptError] = useState<string | null>(null)
+  const [acceptBanner, setAcceptBanner] = useState<string | null>(null)
+  const [acceptedHref, setAcceptedHref] = useState<string | null>(null)
 
   useEffect(() => {
     if (!quoteId) {
@@ -126,7 +130,7 @@ export function QuoteDetailPage() {
     }
   }
 
-  async function run(action: PendingAction) {
+  async function run(action: Exclude<PendingAction, 'accept'>) {
     if (!quote) {
       return
     }
@@ -151,11 +155,9 @@ export function QuoteDetailPage() {
       const next =
         action === 'send'
           ? await repository.send(quote.id, body)
-          : action === 'accept'
-            ? await repository.accept(quote.id, body)
-            : action === 'reject'
-              ? await repository.reject(quote.id, body)
-              : await repository.revertToDraft(quote.id, body)
+          : action === 'reject'
+            ? await repository.reject(quote.id, body)
+            : await repository.revertToDraft(quote.id, body)
 
       setQuote(next)
       setNotice(noticeFor(action))
@@ -163,15 +165,70 @@ export function QuoteDetailPage() {
       setVersionConflict(false)
     } catch (error) {
       const mapped = mapQuoteError(error)
-      setMessage(quoteBannerMessage(t.quotes, mapped))
-      setVersionConflict(mapped.versionConflict)
+      const banner = quoteBannerMessage(t.quotes, mapped)
+      setVersionConflict(mapped.versionConflict || mapped.retryable)
       setConfirm(null)
+
+      if (mapped.bannerCode === 'has_delivery_order') {
+        try {
+          const fresh = await repository.get(quote.id)
+          setQuote(fresh)
+        } catch {
+          // Keep the conflict message below.
+        }
+      }
+
+      setMessage(banner)
     } finally {
       setPending(null)
     }
   }
 
-  const actions = quote ? quoteActionState(quote.status, quote.items.length) : null
+  async function acceptQuote(clientPoNumber: string | null) {
+    if (!quote) {
+      return
+    }
+
+    setPending('accept')
+    setMessage(null)
+    setAcceptError(null)
+    setAcceptBanner(null)
+
+    try {
+      const next = await repository.accept(quote.id, {
+        version: quote.version,
+        clientPoNumber,
+      })
+      setQuote(next)
+      setNotice('accepted')
+      setAcceptedHref(next.deliveryOrderId ? appDeliveryOrderPath(next.deliveryOrderId) : null)
+      setVersionConflict(false)
+    } catch (error) {
+      const mapped = mapQuoteError(error)
+      const fields = mappedToFieldErrors(t.quotes, mapped)
+      const banner = quoteBannerMessage(t.quotes, mapped)
+      setAcceptError(fields.clientPoNumber ?? null)
+      setAcceptBanner(fields.clientPoNumber ? null : banner)
+      setVersionConflict(mapped.versionConflict || mapped.retryable)
+
+      if (mapped.retryable || mapped.bannerCode === 'has_delivery_order') {
+        try {
+          const fresh = await repository.get(quote.id)
+          setQuote(fresh)
+
+          if (fresh.deliveryOrderId) {
+            setAcceptedHref(appDeliveryOrderPath(fresh.deliveryOrderId))
+          }
+        } catch {
+          // The banner already explains the failure.
+        }
+      }
+    } finally {
+      setPending(null)
+    }
+  }
+
+  const actions = quote ? quoteActionState(quote.status, quote.items.length, Boolean(quote.deliveryOrderId)) : null
   const sortedItems = quote ? quote.items.slice().sort((left, right) => left.position - right.position) : []
 
   return (
@@ -218,12 +275,29 @@ export function QuoteDetailPage() {
                   {pending === 'send' ? copy.working : copy.send}
                 </Button>
               ) : null}
+              {quote.deliveryOrderId ? (
+                <Link
+                  to={appDeliveryOrderPath(quote.deliveryOrderId)}
+                  className={cn(
+                    'inline-flex h-10 items-center justify-center rounded-full border border-border bg-white px-4 text-sm font-semibold text-ink shadow-sm',
+                    'hover:border-brand-200 hover:bg-brand-50 hover:text-brand-800',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
+                  )}
+                >
+                  {copy.viewDeliveryOrder}
+                </Link>
+              ) : null}
               {actions.showAccept ? (
                 <Button
                   type="button"
                   disabled={!actions.acceptEnabled || pending !== null}
                   aria-describedby={actions.acceptDisabledReason ? 'quote-accept-reason' : undefined}
-                  onClick={() => setConfirm('accept')}
+                  onClick={() => {
+                    setAcceptError(null)
+                    setAcceptBanner(null)
+                    setAcceptedHref(null)
+                    setConfirm('accept')
+                  }}
                 >
                   {copy.accept}
                 </Button>
@@ -259,14 +333,19 @@ export function QuoteDetailPage() {
           {actions.sendDisabledReason ? (
             <p className={cn(AppTextStyles.bodySm, 'mt-4')}>{copy.emptySend}</p>
           ) : null}
-          {!actions.showEdit && !actions.showSend && !actions.showAccept ? (
+          {!actions.showEdit && !actions.showSend && !actions.showAccept && !actions.showReject ? (
             <p className={cn(AppTextStyles.bodySm, 'mt-4 max-w-2xl')}>{copy.readOnly}</p>
           ) : null}
 
           <div className="mt-4 space-y-4">
             {notice ? (
               <div role="status" className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
-                {t.quotes.notice[notice]}
+                <p>{t.quotes.notice[notice]}</p>
+                {notice === 'accepted' && quote.deliveryOrderId ? (
+                  <Link to={appDeliveryOrderPath(quote.deliveryOrderId)} className={cn(AppTextStyles.link, 'mt-2 inline-flex')}>
+                    {copy.viewDeliveryOrder}
+                  </Link>
+                ) : null}
               </div>
             ) : null}
             {message ? (
@@ -418,17 +497,14 @@ export function QuoteDetailPage() {
         </div>
       ) : null}
 
-      <ConfirmDialog
+      <AcceptQuoteDialog
         open={confirm === 'accept'}
-        title={copy.acceptTitle}
-        body={copy.acceptBody}
-        confirmLabel={copy.accept}
-        pendingLabel={copy.working}
-        cancelLabel={copy.cancel}
-        closeLabel={t.quotes.closeDialog}
         pending={pending === 'accept'}
-        onConfirm={() => {
-          void run('accept')
+        clientPoError={acceptError}
+        banner={acceptBanner}
+        successHref={acceptedHref}
+        onConfirm={(clientPoNumber) => {
+          void acceptQuote(clientPoNumber)
         }}
         onClose={() => setConfirm(null)}
       />

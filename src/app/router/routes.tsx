@@ -1,6 +1,12 @@
 import type { RouteObject } from 'react-router-dom'
 import { AuthLayout } from '@/app/layouts/auth-layout'
 import { PublicLayout } from '@/app/layouts/public-layout'
+import {
+  DeliveryCertificateRoute,
+  DeliveryOrderDetailRoute,
+  DeliveryOrderListRoute,
+  RegisterDeliveryRoute,
+} from '@/app/router/delivery-order-routes'
 import { RequireAuth } from '@/features/auth/presentation/require-auth'
 import { LoginPage } from '@/features/auth/presentation/pages/login-page'
 import { WhoWeArePage } from '@/features/company/presentation/pages/who-we-are-page'
@@ -94,7 +100,19 @@ export const routes: RouteObject[] = [
           },
           {
             path: 'ordenes-de-entrega',
-            element: <ModulePlaceholderPage moduleId="deliveryOrders" />,
+            element: <DeliveryOrderListRoute />,
+          },
+          {
+            path: 'ordenes-de-entrega/:orderId/registrar-entrega',
+            element: <RegisterDeliveryRoute />,
+          },
+          {
+            path: 'ordenes-de-entrega/:orderId/certificados/:deliveryId',
+            element: <DeliveryCertificateRoute />,
+          },
+          {
+            path: 'ordenes-de-entrega/:orderId',
+            element: <DeliveryOrderDetailRoute />,
           },
         ],
       },

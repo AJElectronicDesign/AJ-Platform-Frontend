@@ -86,6 +86,22 @@ describe('mapQuoteError', () => {
     expect(locked.fieldMessages).toEqual({})
   })
 
+  it('maps a delivery order conflict and a retryable concurrent update', () => {
+    const hasOrder = mapQuoteError(
+      new ApiError(409, 'Esta cotización ya tiene una orden de entrega', 'QUOTE_HAS_DELIVERY_ORDER', [
+        { path: 'status', message: 'Esta cotización ya tiene una orden de entrega' },
+      ]),
+    )
+    const concurrent = mapQuoteError(
+      new ApiError(409, 'Otro cambio está en curso. Intenta de nuevo.', 'CONCURRENT_UPDATE', []),
+    )
+
+    expect(hasOrder.bannerCode).toBe('has_delivery_order')
+    expect(hasOrder.fieldMessages).toEqual({})
+    expect(concurrent.bannerCode).toBe('concurrent_update')
+    expect(concurrent.retryable).toBe(true)
+  })
+
   it('maps transport failures and aborts', () => {
     expect(mapQuoteError(new ApiError(0, 'Failed to fetch', 'network')).bannerCode).toBe('network')
     expect(mapQuoteError(new DOMException('Aborted', 'AbortError')).aborted).toBe(true)
